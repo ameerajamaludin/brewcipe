@@ -1,0 +1,67 @@
+# ==========================================
+# Environment variables / secrets
+# ==========================================
+
+.env
+.env.*
+!.env.example
+
+# ==========================================
+# Private / production data
+# ==========================================
+
+data/
+private-data/
+*.private.json
+
+# Data preparation artifacts
+scripts/enrichment/output/
+scripts/enrichment/temp/
+scripts/enrichment/tmp/
+
+# ==========================================
+# Frontend - Node / React
+# ==========================================
+
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/.vite/
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ==========================================
+# Backend - Python
+# ==========================================
+
+backend/.venv/
+backend/venv/
+backend/__pycache__/
+backend/.pytest_cache/
+backend/.mypy_cache/
+
+*.py[cod]
+*$py.class
+
+# ==========================================
+# IDE / editor
+# ==========================================
+
+.vscode/
+.idea/
+
+# ==========================================
+# Operating system
+# ==========================================
+
+.DS_Store
+Thumbs.db
+
+# ==========================================
+# Misc
+# ==========================================
+
+*.log
