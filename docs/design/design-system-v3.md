@@ -133,11 +133,27 @@ Avoid scattering arbitrary values throughout individual components or pages.
 
 ---
 
-## 2.5 Mobile First
+## 2.5 Mobile First, Responsive Throughout
 
-Base layouts and component behavior should support smaller screens first.
+Mobile is the baseline Brewcipe experience.
 
-Larger-screen behavior should progressively enhance the experience rather than create a separate desktop design system.
+Layouts and component behavior should support smaller screens first, then adapt deliberately across tablet, desktop, and wide desktop viewports.
+
+Responsive adaptation may change:
+
+* navigation presentation
+* column count
+* content width
+* spacing
+* component arrangement
+* control placement
+* information density
+
+The same core content hierarchy and interaction model should remain recognizable across screen sizes.
+
+Mobile patterns do not need to be reproduced literally on larger screens. For example, persistent mobile bottom navigation may transform into desktop header navigation while preserving access to the same primary destinations.
+
+Larger-screen behavior should progressively enhance the experience rather than create an unrelated desktop design system.
 
 ---
 
@@ -611,184 +627,339 @@ Do not:
 
 ## 5.1 Typography Strategy
 
-Brewcipe should use a restrained typography system combining:
+Brewcipe should use a restrained typography system combining three clearly defined roles:
 
 ```text
-Display / Brand Typography
+Brand Typography
+        +
+Editorial / Coffee Typography
         +
 Interface / Content Typography
 ```
 
-Typography should contribute substantially to Brewcipe's editorial character.
+Each typeface should have a specific responsibility within the product.
+
+```text
+Piscolabis
+Brand identity and rare expressive moments
+
+Fraunces
+Coffee identity, recipe titles, and editorial moments
+
+Plus Jakarta Sans
+Interface, content, controls, and structured data
+```
+
+Typography should contribute substantially to Brewcipe's warm, editorial, and coffee-focused character.
 
 Decorative coffee graphics should not be required to make the product feel coffee-oriented.
 
+The typography system should remain restrained. The three typefaces should not compete for attention or be used together without a clear semantic reason.
+
 ---
 
-## 5.2 Display Typeface
+## 5.2 Brand Typeface
 
-**Current candidate: Piscolabis**
+**Typeface: Piscolabis**
 
-Piscolabis is being considered for Brewcipe's display and brand typography.
+Piscolabis is Brewcipe's dedicated brand typeface.
+
+Its role is narrower than the product's editorial and interface typography. It should provide distinctive brand character without affecting the readability of everyday product experiences.
 
 Potential uses include:
 
-* selected hero headings
-* prominent editorial moments
+* Brewcipe wordmark exploration
 * brand treatments
-* wordmark exploration
-
-It should be used selectively.
+* selected campaign or promotional moments
+* rare expressive brand applications
 
 Piscolabis should not be used for:
 
+* coffee names
+* recipe titles
+* section headings
 * body copy
 * recipe instructions
 * form controls
 * navigation
 * metadata
+* AI responses
 * long passages
 * general application UI
 
-Final approval remains subject to visual and multilingual testing.
+Piscolabis should rarely appear alongside both Fraunces and Plus Jakarta Sans within the same interface composition.
+
+Its use remains subject to visual and multilingual validation where applicable.
 
 ---
 
-## 5.3 Interface Typeface
+## 5.3 Editorial / Coffee Typeface
 
-**Status: TBD**
+**Typeface: Fraunces**
 
-Brewcipe requires a highly readable interface typeface for:
+Fraunces is Brewcipe's secondary typeface and provides the product's editorial character.
+
+It should primarily be used where typography represents coffee identity, discovery, storytelling, or editorial emphasis rather than interface functionality.
+
+Appropriate uses include:
 
 * coffee names
-* headings
+* recipe titles
+* selected discovery titles
+* editorial features
+* selected hero typography
+* prominent coffee-focused content moments
+
+Fraunces should not automatically be applied to every heading.
+
+Functional section headings such as:
+
+* Ingredients
+* Instructions
+* Cultural Context
+* Geography
+* Brewing Details
+
+should generally use the interface typeface unless a specific editorial treatment is justified.
+
+Fraunces should not be used for:
+
 * body copy
-* ingredients
-* instructions
+* long-form cultural context
+* recipe instructions
 * navigation
 * buttons
-* forms
+* form controls
+* filters
 * metadata
+* structured recipe data
 * AI responses
+* dense application UI
 
-The selected typeface should feel:
-
-* human
-* warm
-* contemporary
-* highly readable
-* restrained
-
-It should avoid feeling excessively corporate, geometric, or generic.
+This distinction allows Fraunces to retain its visual impact without making Brewcipe excessively serif-heavy.
 
 ---
 
-## 5.4 Font Fallbacks
+## 5.4 Interface / Content Typeface
 
-Brewcipe contains multilingual coffee names.
+**Typeface: Plus Jakarta Sans**
+
+Plus Jakarta Sans is Brewcipe's primary interface and content typeface.
+
+It should be used for the majority of product interactions and reading experiences, including:
+
+* navigation
+* interface headings
+* section headings
+* body copy
+* ingredients
+* preparation instructions
+* buttons
+* forms
+* filters
+* search
+* metadata
+* geography labels
+* recipe measurements
+* brew ratios
+* temperatures
+* brew times
+* AI Sommelier responses
+
+Plus Jakarta Sans should provide a clear, contemporary, and highly readable foundation while allowing Fraunces and Piscolabis to provide character in more selective roles.
+
+Numerical information should remain particularly clear because structured brewing data is an important part of Brewcipe's content.
+
+Tabular numerals may be used where numerical alignment provides a functional benefit, such as:
+
+* timers
+* comparison views
+* tables
+* aligned recipe measurements
+* structured numerical displays
+
+Tabular numerals should not be enabled globally where proportional numerals provide more natural reading within prose.
+
+---
+
+## 5.5 Font Fallbacks
+
+Brewcipe contains multilingual coffee names and content.
 
 Font stacks should therefore provide appropriate fallbacks when the primary typeface does not contain the required glyph.
 
-Conceptually:
+Conceptually, interface typography should follow:
 
 ```css
 font-family:
-  "Brewcipe Interface",
+  "Plus Jakarta Sans",
   "Noto Sans",
   system-ui,
   sans-serif;
 ```
 
-Actual fallback configuration should be based on the scripts represented in Brewcipe's production data.
+Editorial typography should follow:
+
+```css
+font-family:
+  "Fraunces",
+  "Noto Serif",
+  serif;
+```
+
+Script-specific Noto fonts or equivalent fallbacks may be introduced where required by Brewcipe's production data.
+
+Fallback behavior should be determined by the scripts represented in the actual coffee dataset rather than English content alone.
+
+A missing glyph must never be treated as an acceptable degradation.
 
 ---
 
-## 5.5 Type Scale
+## 5.6 Type Scale
 
-The final type scale should remain limited and mobile-first.
+The type scale should remain limited, semantic, and mobile-first.
 
-Proposed starting scale:
+Recommended starting scale:
 
 ```text
 Display
-40px / 48px
+48–56px / 1.05–1.10
+Fraunces
+
+Coffee Title
+36–40px / 1.10
+Fraunces
 
 Heading 1
 32px / 40px
+Plus Jakarta Sans / Semibold
 
 Heading 2
 24px / 32px
+Plus Jakarta Sans / Semibold
 
 Heading 3
 20px / 28px
+Plus Jakarta Sans / Semibold
 
 Body Large
 18px / 28px
+Plus Jakarta Sans / Regular
 
 Body
-16px / 24px
+16px / 26px
+Plus Jakarta Sans / Regular
 
 Body Small
 14px / 20px
+Plus Jakarta Sans / Regular or Medium
+
+Label
+14px / 20px
+Plus Jakarta Sans / Medium or Semibold
 
 Caption
 12px / 16px
+Plus Jakarta Sans / Medium
 ```
 
-Larger display sizes may be introduced responsively where justified.
+Display and coffee-title sizes may scale responsively where justified.
 
-The scale should be validated through actual Brewcipe wireframes before being considered final.
+Large typography should not be increased solely for visual impact. It should reflect the hierarchy and importance of the content.
+
+The scale should be validated across actual Brewcipe interfaces, particularly:
+
+* Home
+* Discover
+* Search
+* Geography
+* Recipe Detail
+* AI Sommelier
 
 ---
 
-## 5.6 Font Weights
+## 5.7 Font Weights
 
-Proposed interface weights:
+The primary Plus Jakarta Sans weight set should remain restrained.
+
+Recommended interface weights:
 
 ```text
 Regular       400
 Medium        500
 Semibold      600
-Bold          700
 ```
 
-Only weights supported and required by the final typefaces should be included.
+Bold `700` should not be loaded or used by default unless a recurring product need is identified during implementation.
+
+Avoid relying on excessive font weight to establish hierarchy.
+
+Hierarchy should primarily come from:
+
+* typeface role
+* font size
+* spacing
+* placement
+* surface hierarchy
+* content importance
+
+Fraunces weights should also be limited to those required by actual editorial treatments.
 
 ---
 
-## 5.7 Line Height
+## 5.8 Line Height
 
-Line height should prioritize readability.
+Line height should prioritize readability and comfortable reading.
 
 Reading-heavy content such as:
 
 * cultural context
 * ingredients
 * preparation instructions
+* coffee descriptions
 * AI responses
 
-should use comfortable line spacing.
+should use generous line spacing.
 
-Display typography may use tighter line heights where readability remains strong.
+The default body style should use approximately:
 
----
+```text
+16px / 26px
+```
 
-## 5.8 Letter Spacing
+Display and coffee-title typography may use tighter line heights where readability remains strong.
 
-Letter spacing should generally follow the selected typeface's natural metrics.
-
-Custom tracking may be introduced for specific display or metadata styles when visually justified.
-
-Avoid arbitrary letter-spacing values throughout individual components.
+Line height should be evaluated using real Brewcipe content, including long coffee names and multilingual text.
 
 ---
 
-## 5.9 Text Styles
+## 5.9 Letter Spacing
 
-Reusable semantic text styles may include:
+Letter spacing should generally follow each typeface's natural metrics.
+
+Custom tracking may be introduced for specific display, label, or metadata styles when visually justified.
+
+Avoid:
+
+* arbitrary tracking values
+* excessive uppercase letter spacing
+* applying the same tracking treatment across different typefaces
+* compensating for poor hierarchy through letter spacing
+
+Letter spacing should be defined through reusable typography tokens rather than individual components.
+
+---
+
+## 5.10 Text Styles
+
+Reusable semantic text styles should reflect content roles rather than arbitrary visual sizes.
+
+Core styles may include:
 
 ```text
 text.display
+text.coffeeTitle
+
 text.heading1
 text.heading2
 text.heading3
@@ -796,41 +967,160 @@ text.heading3
 text.bodyLarge
 text.body
 text.bodySmall
-text.caption
 
 text.label
+text.caption
 text.button
 ```
+
+Typeface mapping should conceptually follow:
+
+```text
+text.display        → Fraunces
+text.coffeeTitle    → Fraunces
+
+text.heading1       → Plus Jakarta Sans
+text.heading2       → Plus Jakarta Sans
+text.heading3       → Plus Jakarta Sans
+
+text.bodyLarge      → Plus Jakarta Sans
+text.body           → Plus Jakarta Sans
+text.bodySmall      → Plus Jakarta Sans
+
+text.label          → Plus Jakarta Sans
+text.caption        → Plus Jakarta Sans
+text.button         → Plus Jakarta Sans
+```
+
+Editorial exceptions may use Fraunces where the content represents coffee identity, discovery, or storytelling.
+
+Components should consume semantic typography styles rather than independently defining font family, font size, weight, line height, and letter spacing.
 
 Additional styles should only be introduced where recurring product needs justify them.
 
 ---
 
-## 5.10 Multilingual Typography
+## 5.11 Numerical Typography
 
-Typography should be tested using representative Brewcipe content rather than English placeholder text alone.
+Brewing data is an important part of Brewcipe's information hierarchy.
+
+Numerical content may include:
+
+* coffee-to-water ratios
+* ingredient quantities
+* temperatures
+* brew times
+* serving quantities
+* measurements
+
+Plus Jakarta Sans should be used for structured numerical information.
+
+Examples include:
+
+```text
+1:15
+18 g
+250 ml
+93°C
+2:30
+```
+
+Tabular numerals should be enabled where values need to align consistently or remain visually stable as they change.
+
+Examples include:
+
+* active timers
+* structured data columns
+* comparison interfaces
+* aligned measurement groups
+
+Proportional numerals should remain the default for numbers embedded naturally within body copy.
+
+---
+
+## 5.12 Multilingual Typography
+
+Typography must be tested using representative Brewcipe content rather than English placeholder text alone.
 
 Testing should include:
 
 * native coffee names
 * accented Latin characters
-* longer coffee names
-* non-Latin scripts represented in Brewcipe's data
+* long coffee names
+* transliterated names
+* non-Latin scripts represented in Brewcipe's production data
+* mixed-script content
+* numerical recipe information
 
-Native names must remain readable when the display typeface does not support the required script.
+Representative examples should include actual coffee names from Brewcipe's dataset.
+
+Fraunces should only be used for a native coffee name when the required characters and script are rendered correctly.
+
+When Fraunces does not support the required script, the interface should fall back gracefully to an appropriate script-compatible typeface.
+
+Native coffee names are meaningful product content and should not be visually reduced to insignificant metadata solely because a fallback font is required.
+
+Fallback typography should preserve the intended hierarchy as closely as possible.
+
+No coffee name should display:
+
+* missing glyphs
+* tofu characters
+* broken Unicode
+* unreadable substitutions
+* inappropriate script rendering
 
 ---
 
-## 5.11 Typography Usage Rules
+## 5.13 Typography Usage Rules
+
+Do:
+
+* use Plus Jakarta Sans as the default product typeface
+* use Fraunces selectively for coffee identity and editorial emphasis
+* reserve Piscolabis for brand-specific applications
+* use semantic typography tokens
+* prioritize readability for recipe and cultural content
+* test typography with real multilingual Brewcipe data
+* use tabular numerals only where alignment provides functional value
+* preserve hierarchy when fallback fonts are required
 
 Do not:
 
-* use display typography for long-form content
+* use Fraunces for every heading
+* use Piscolabis as a general display or interface font
+* use display or editorial typography for long-form content
 * introduce arbitrary font sizes
-* use multiple decorative typefaces without defined roles
+* introduce arbitrary font weights
+* introduce arbitrary line heights or tracking
+* use multiple decorative typefaces without clearly defined roles
+* place all three Brewcipe typefaces together without a clear reason
 * sacrifice readability for brand character
 * assume all coffee names use Latin characters
 * allow missing glyphs or broken Unicode to reach the interface
+* create typography styling independently inside individual components when an existing semantic style can be reused
+
+---
+
+## 5.14 Typography Principle
+
+Brewcipe's typography should communicate three layers of the product:
+
+```text
+Piscolabis
+Brand
+
+Fraunces
+Coffee + Editorial Character
+
+Plus Jakarta Sans
+Product + Reading + Interaction
+```
+
+The interface should feel expressive because the typography roles are deliberate, not because decorative typography is used everywhere.
+
+When in doubt, default to Plus Jakarta Sans and introduce Fraunces or Piscolabis only when the content's role clearly justifies it.
+
 
 ---
 
@@ -881,53 +1171,120 @@ Use the established scale before introducing custom spacing values.
 
 # 7. Layout & Grid
 
-## 7.1 Page Container
+## 7.1 Layout Philosophy
 
-Content should use responsive page containers rather than stretching indefinitely across large screens.
+Brewcipe should use responsive containers and content-aware layouts rather than stretching interfaces indefinitely across available screen width.
 
----
+Layout should support both:
 
-## 7.2 Grid
+* compact, application-oriented interfaces
+* comfortable, reading-oriented coffee and recipe content
 
-The final grid configuration should be established through wireframing and responsive testing.
-
-Status: **TBD**
-
----
-
-## 7.3 Columns
-
-Column behavior should respond to content needs rather than forcing every page into the same grid.
-
-Discovery views may use multi-column layouts on larger screens while reading-heavy recipe content may remain narrower.
+Different content types may use different maximum widths while remaining aligned to the same responsive system.
 
 ---
 
-## 7.4 Gutters
+## 7.2 Responsive Layout Classes
 
-Initial horizontal spacing direction:
+Brewcipe should design for four general viewport classes:
 
 ```text
-Mobile             16px
-Larger mobile      24px
-Desktop            32px or appropriate responsive value
+Mobile              320–767px
+Tablet              768–1023px
+Desktop             1024–1439px
+Wide Desktop        1440px+
 ```
 
-Final gutter behavior should be validated during wireframing.
+These ranges are design guidance rather than requirements to trigger every responsive change at an exact pixel value.
+
+Components should respond when their content or interaction requires adaptation rather than relying exclusively on device categories.
 
 ---
 
-## 7.5 Content Width
+## 7.3 Page Gutters
 
-Wide displays should use maximum content widths appropriate to the content.
+Initial horizontal page gutters:
+
+```text
+Mobile              16px
+Tablet              24px
+Desktop             32px
+Wide Desktop        40–48px
+```
+
+These values should use Brewcipe's established spacing tokens.
+
+Individual components should not introduce unrelated page gutters.
+
+---
+
+## 7.4 Content Containers
+
+Brewcipe may use multiple content-container types according to content purpose.
+
+### App Container
+
+Supports general application screens and structured interface content.
+
+### Discovery Container
+
+Supports search results, coffee discovery, geography exploration, and layouts that benefit from additional horizontal space.
+
+### Reading Container
+
+Supports recipe instructions, cultural context, descriptive content, and other reading-heavy material.
+
+### Narrow Container
+
+Supports focused forms, authentication, and similarly constrained tasks.
+
+### Full-Bleed Media
+
+May be used selectively for imagery where edge-to-edge presentation strengthens the experience.
+
+Container selection should follow content needs rather than page-specific arbitrary widths.
+
+---
+
+## 7.5 Columns
+
+Column count should respond to content and available space.
+
+Mobile interfaces should generally use a single primary content column.
+
+Tablet layouts may introduce two-column structures where content benefits from additional horizontal space.
+
+Desktop and wide-desktop discovery interfaces may use multi-column grids.
+
+Reading-heavy recipe content should remain constrained even when surrounding layouts become wider.
+
+---
+
+## 7.6 Content Width
+
+Wide displays should increase useful whitespace and layout capacity before excessively increasing individual component width.
 
 Discovery grids may use more horizontal space than reading-heavy recipe sections.
 
+Content should remain visually connected and should not become excessively dispersed on large displays.
+
 ---
 
-## 7.6 Reading Width
+## 7.7 Reading Width
 
-Recipe instructions, cultural context, and other reading-heavy content should maintain comfortable line lengths.
+Recipe instructions, preparation steps, cultural context, descriptions, and other reading-heavy content should maintain comfortable line lengths.
+
+Reading containers should remain constrained on desktop and wide-desktop screens rather than expanding to the full application width.
+
+---
+
+## 7.8 Alignment
+
+Major page elements should align to shared container boundaries wherever practical.
+
+Headers, search controls, section headings, lists, grids, and reading content should establish intentional alignment relationships.
+
+Avoid arbitrary horizontal offsets that weaken visual rhythm.
 
 ---
 
@@ -937,30 +1294,84 @@ Recipe instructions, cultural context, and other reading-heavy content should ma
 
 Mobile is the baseline Brewcipe experience.
 
-Desktop layouts should progressively enhance the mobile structure.
+Responsive design should preserve the same product hierarchy while adapting navigation, layout, density, and component arrangement to available space.
+
+Desktop should progressively enhance the mobile experience rather than behave as an unrelated product.
 
 ---
 
-## 8.2 Breakpoints
+## 8.2 Responsive Layout Modes
 
-Brewcipe may initially align with the breakpoint system provided by the selected frontend styling framework.
+Brewcipe should account for four general responsive modes.
 
-Final breakpoint decisions should respond to actual layout needs.
+### Mobile
+
+Typical behavior:
+
+* single-column primary content
+* persistent bottom navigation for primary destinations
+* compact app or page headers
+* full-width or near-full-width search controls
+* vertically stacked cards and lists
+* touch-first interactions
+* 16px page gutters
+
+### Tablet
+
+Typical behavior:
+
+* one- or two-column layouts depending on content
+* increased page gutters
+* larger content regions
+* selective split layouts
+* adaptive navigation based on available width
+* increased information density where useful
+
+Bottom navigation may remain appropriate on smaller tablet layouts and may transition to a larger-screen navigation pattern when sufficient horizontal space is available.
+
+### Desktop
+
+Typical behavior:
+
+* desktop navigation replacing mobile bottom navigation
+* multi-column discovery layouts where useful
+* wider search and results interfaces
+* selective split-detail layouts
+* constrained reading widths
+* increased whitespace
+* pointer and keyboard interaction alongside touch support
+
+### Wide Desktop
+
+Typical behavior:
+
+* maximum-width content containers
+* additional discovery columns where appropriate
+* increased surrounding whitespace
+* stable reading widths
+* restrained component scaling
+
+Wide screens should not cause content, controls, or reading lines to expand indefinitely.
 
 ---
 
-## 8.3 Responsive Layout Behavior
+## 8.3 Responsive Transformation
 
-Components should adapt through:
+Responsive behavior may change:
 
 * width
 * spacing
-* layout
-* visibility where appropriate
+* layout direction
+* column count
 * positioning
+* navigation presentation
+* control placement
 * content density
+* visibility of secondary information where appropriate
 
-Avoid maintaining unrelated mobile and desktop component systems.
+Responsive changes should preserve the user's understanding of the interface.
+
+Primary actions and destinations should not disappear without an equivalent accessible presentation.
 
 ---
 
@@ -968,14 +1379,47 @@ Avoid maintaining unrelated mobile and desktop component systems.
 
 Display and heading sizes may increase on larger viewports where appropriate.
 
-Body text should remain readable and stable.
+Body text should remain readable and relatively stable across viewport sizes.
+
+Typography should respond to available space without creating excessively large text merely because a screen is wide.
 
 ---
 
 ## 8.5 Responsive Components
 
-Reusable components should define responsive behavior when their structure changes meaningfully across viewport sizes.
+Reusable components should define responsive behavior whenever their structure changes meaningfully across viewport sizes.
 
+A responsive component may:
+
+* change orientation
+* change width
+* change internal spacing
+* expose additional information
+* rearrange actions
+* transform between compact and expanded variants
+
+The underlying content and interaction purpose should remain consistent.
+
+---
+
+## 8.6 Responsive Navigation
+
+Primary navigation should adapt to the available viewport rather than using one presentation at every screen size.
+
+Conceptually:
+
+```text
+Mobile
+Bottom Navigation
+        ↓
+Tablet
+Bottom or Adaptive Navigation
+        ↓
+Desktop / Wide Desktop
+Desktop Navigation
+```
+
+Navigation destinations should remain consistent with Brewcipe's information architecture even when their presentation changes.
 ---
 
 # 9. Shape
@@ -1075,15 +1519,20 @@ rather than large blurred shadows.
 
 ## 10.5 Surface Hierarchy
 
-Surface hierarchy should remain shallow.
+Surface hierarchy should remain shallow and structured.
 
-Avoid:
+Conceptually:
 
 ```text
-card
-inside card
-inside another card
-inside floating container
+Page Background
+        ↓
+Base Surface
+        ↓
+Interactive Surface
+        ↓
+Selected / Active Surface
+        ↓
+Overlay / Elevated Surface
 ```
 
 Content-heavy recipe pages should frequently use spacing, typography, and dividers instead of card containers.
@@ -1092,21 +1541,34 @@ Content-heavy recipe pages should frequently use spacing, typography, and divide
 
 # 11. Iconography
 
-## 11.1 Icon Family
+# 11. Iconography
 
-Brewcipe should use one consistent icon family.
+## 11.1 Icon Direction
 
-Exact family: **TBD**
+Brewcipe should use one consistent icon family across navigation, actions, controls, and informational UI.
 
-A restrained outline family is preferred as the initial direction.
+The preferred direction is a restrained, simple icon family with consistent geometry and visual weight.
+
+Icons should support Brewcipe's modern application structure without making the interface feel generic, overly technical, playful, or decorative.
+
+The final icon library should be selected during implementation based on visual compatibility, coverage, accessibility, and frontend maintainability.
 
 ---
 
-## 11.2 Sizes
+## 11.2 Icon Size Scale
 
-A limited icon size scale should be established alongside component implementation.
+Use a restrained icon size scale:
 
-Status: **TBD**
+```text
+16px        Inline and metadata
+20px        Standard controls
+24px        Primary navigation and prominent controls
+28–32px     Rare prominent use
+```
+
+The visible icon size is independent from the interactive touch target.
+
+Avoid introducing arbitrary icon sizes where an established size is suitable.
 
 ---
 
@@ -1114,34 +1576,65 @@ Status: **TBD**
 
 Icons should maintain consistent visual weight throughout the interface.
 
+Icons from different sources should not be mixed when their stroke, geometry, or visual proportions are noticeably inconsistent.
+
 ---
 
-## 11.4 Interactive Icons
+## 11.4 Navigation Icons
 
-Interactive icons should be used when their purpose is sufficiently recognizable.
+Primary mobile navigation should pair recognizable icons with concise text labels.
 
-Examples may include:
+Navigation icons should define:
+
+* default state
+* selected state
+* focus state
+* active / pressed state
+* disabled state where applicable
+
+Selected navigation may use a stronger or filled icon treatment where supported by the chosen icon family.
+
+Selection should not rely solely on color.
+
+---
+
+## 11.5 Interactive Icons
+
+Interactive icons may support recognizable actions such as:
 
 * search
 * favorite
-* menu
+* back
 * close
+* filter
+* menu
+* clear
+* account
+* navigation
+
+Icon-only controls should be reserved for actions whose meaning remains sufficiently recognizable.
+
+Less familiar actions should include visible text where practical.
 
 ---
 
-## 11.5 Decorative Icons
+## 11.6 Decorative and Coffee-Specific Icons
 
 Decorative icons should remain limited.
 
-Coffee-specific icons should only be introduced where they communicate useful information.
+Coffee-specific icons may be used when they communicate meaningful information, such as a brewing method or recurring coffee attribute.
+
+They should not be introduced merely to make the interface appear more coffee-themed.
 
 ---
 
-## 11.6 Accessibility
+## 11.7 Accessibility
 
 Icon-only controls must provide accessible names.
 
 Decorative icons should be hidden from assistive technologies where appropriate.
+
+Interactive icons must provide sufficiently large interaction targets even when the visible icon itself is smaller.
 
 ---
 
@@ -1329,7 +1822,11 @@ Components should define the states applicable to their behavior.
 
 ## 14.6 Responsive Behavior
 
-Components should document responsive changes where their layout or interaction changes meaningfully.
+Components should document responsive changes where their layout, density, navigation role, or interaction changes meaningfully.
+
+Responsive variants should preserve the same underlying purpose and content hierarchy rather than becoming unrelated components for different devices.
+
+Where appropriate, components may transition between compact, standard, and expanded presentations.
 
 ---
 
@@ -1343,12 +1840,20 @@ Accessibility requirements should be part of component specifications.
 
 ## 15.1 Button
 
-Initial button variants:
+Core button variants:
 
 ```text
 Primary
 Secondary
 Ghost
+```
+
+Buttons may support the following sizes where required:
+
+```text
+Small
+Medium
+Large
 ```
 
 Applicable states may include:
@@ -1362,16 +1867,38 @@ Disabled
 Loading
 ```
 
-Exact visual specifications should be established after the dark semantic color system is finalized.
+Buttons may contain:
+
+```text
+Label
+Icon + Label
+Label + Icon
+```
+
+Primary buttons should communicate the strongest action within the current context rather than being used for every available action.
+
+Exact visual specifications should use the finalized dark semantic color system.
 
 ---
 
 ## 15.2 Icon Button
 
-Icon buttons may support recognizable compact actions.
+Icon buttons support recognizable compact actions.
 
-They must provide accessible names.
+Common uses may include:
 
+* favorite
+* back
+* close
+* clear
+* filter
+* menu
+
+The visible icon should use the established icon scale while the surrounding interactive area provides a comfortable touch target.
+
+Icon buttons must provide accessible names.
+
+Unfamiliar or ambiguous actions should not rely on icon-only presentation.
 ---
 
 ## 15.3 Link
@@ -1402,12 +1929,19 @@ Text inputs should share consistent:
 
 Search is a core Brewcipe discovery interaction.
 
-The search input should be:
+The reusable search pattern may include:
 
-* visually identifiable
-* comfortable on mobile
-* keyboard accessible
-* consistent wherever coffee search is available
+* search icon
+* text input
+* clear action when content is present
+* optional contextual filter or action where required
+
+Search may support:
+
+```text
+Standard
+Prominent / Discovery
+Compact
 
 ---
 
@@ -1436,33 +1970,156 @@ Validation should:
 
 Navigation should reflect Brewcipe's information architecture.
 
-The design system defines navigation presentation and behavior, not the final destination hierarchy.
+The design system defines how navigation destinations are presented and behave across viewport sizes. The information architecture remains responsible for defining the final destination hierarchy.
+
+Navigation should be:
+
+* immediately recognizable
+* consistent across screens
+* responsive to available space
+* accessible by keyboard and touch
+* clear in its selected state
+* restrained in visual complexity
 
 ---
 
-## 17.2 Global Navigation
+## 17.2 Primary Navigation
 
-Exact structure:
+Primary navigation provides persistent access to Brewcipe's core destinations.
 
-**To be determined through information architecture and wireframing.**
+The exact destinations and labels should follow `information-architecture-v3.md`.
 
----
-
-## 17.3 Mobile Navigation
-
-Mobile navigation should prioritize core user activities while remaining space-efficient and accessible.
-
-Exact pattern:
-
-**TBD**
+Primary destinations should remain conceptually consistent across responsive layouts even when navigation presentation changes.
 
 ---
 
-## 17.4 Contextual Navigation
+## 17.3 Mobile Bottom Navigation
 
-Contextual navigation may be introduced where Brewcipe's content hierarchy requires it.
+Mobile should use persistent bottom navigation for Brewcipe's primary destinations unless usability testing demonstrates a stronger alternative.
+
+The pattern should:
+
+* remain fixed to the bottom of the viewport
+* contain a restrained number of primary destinations
+* use an icon and concise text label for each destination
+* provide a clear selected state
+* provide comfortable touch targets
+* account for device safe areas
+* avoid obscuring page content
+* remain visually distinct from scrollable content without excessive elevation
+
+Content containers should include sufficient bottom spacing so that content and actions are not hidden behind persistent navigation.
 
 ---
+
+## 17.4 Tablet Navigation
+
+Tablet navigation should adapt according to available width and content needs.
+
+Smaller tablet layouts may retain bottom navigation.
+
+Larger tablet layouts may transition toward the desktop navigation pattern when this improves space efficiency and clarity.
+
+The navigation hierarchy should not change merely because its presentation changes.
+
+---
+
+## 17.5 Desktop Navigation
+
+Desktop and wide-desktop layouts should replace mobile bottom navigation with an appropriate larger-screen navigation pattern.
+
+The default direction is a persistent application header containing:
+
+* Brewcipe brand identity
+* primary navigation destinations
+* account or authentication access
+* contextual actions where appropriate
+
+A navigation rail may be considered through wireframing if it provides a stronger layout for Brewcipe's actual content.
+
+Desktop navigation should not simply stretch the mobile bottom-navigation component across the top of the screen.
+
+---
+
+## 17.6 App and Page Headers
+
+Brewcipe should use consistent header patterns to establish:
+
+* page identity
+* navigation context
+* back navigation where required
+* relevant contextual actions
+
+Mobile headers should remain compact.
+
+Desktop headers may integrate with the primary application navigation where appropriate.
+
+---
+
+## 17.7 Back Navigation
+
+Back navigation should be provided where users enter a deeper content hierarchy or focused task.
+
+Back controls should use a consistent icon and interaction pattern.
+
+Browser navigation behavior should remain functional and predictable.
+
+---
+
+## 17.8 Contextual Navigation
+
+Contextual navigation may support relationships within Brewcipe content without competing with primary navigation.
+
+Examples may include:
+
+* tabs
+* segmented controls
+* section navigation
+* geography hierarchy
+* related-content navigation
+
+Contextual navigation should not duplicate primary navigation unnecessarily.
+
+---
+
+## 17.9 Navigation States
+
+Navigation items should support relevant states including:
+
+```text
+Default
+Hover
+Focus
+Active / Pressed
+Selected
+Disabled where applicable
+```
+
+Selected navigation should remain understandable without relying solely on color.
+
+---
+
+## 17.10 Responsive Navigation Transformation
+
+Navigation presentation should adapt without changing the user's underlying mental model.
+
+Conceptually:
+
+```text
+Mobile
+Persistent Bottom Navigation
+        ↓
+Tablet
+Bottom or Adaptive Navigation
+        ↓
+Desktop / Wide Desktop
+Application Header or validated larger-screen equivalent
+```
+
+A destination available through primary navigation on one viewport should not disappear on another viewport without an equivalent accessible route.
+---
+
+# 18. Content & Surfaces
 
 # 18. Content & Surfaces
 
@@ -1470,11 +2127,15 @@ Contextual navigation may be introduced where Brewcipe's content hierarchy requi
 
 Surfaces should use semantic background tokens and maintain a restrained hierarchy.
 
+Surface changes should communicate meaningful grouping, interaction, selection, or elevation rather than decorating every content block.
+
 ---
 
 ## 18.2 Divider
 
 Dividers should support content organization without becoming visually dominant.
+
+Spacing should be preferred where it already provides sufficient separation.
 
 ---
 
@@ -1484,9 +2145,27 @@ Cards should represent meaningful grouped or interactive content.
 
 Content should not automatically be placed inside a card merely because it exists.
 
+Cards should remain relatively flat and should avoid excessive shadow, rounding, or nested containers.
+
 ---
 
-## 18.4 Image
+## 18.4 List Row
+
+List rows provide a compact alternative to cards for structured or repeated content.
+
+A list row may contain:
+
+* optional thumbnail or icon
+* primary label
+* secondary information
+* metadata
+* trailing action or disclosure indicator
+
+List rows should support efficient scanning and should be considered for search results, favorites, geography, and other information-dense contexts where a full card is unnecessary.
+
+---
+
+## 18.5 Image
 
 Reusable image treatments should define:
 
@@ -1496,19 +2175,78 @@ Reusable image treatments should define:
 * fallback behavior
 * accessibility treatment
 
+Image presentation may adapt between card, list, detail, and editorial contexts.
+
 ---
 
-## 18.5 Metadata
+## 18.6 Metadata
 
 Metadata should remain easy to scan without visually overpowering primary coffee information.
 
+Related metadata may be grouped through spacing, alignment, or typography rather than automatically using badges or pills.
+
 ---
 
-## 18.6 Tag / Badge
+## 18.7 Tag / Badge
 
 Tags and badges should represent meaningful categorical or status information.
 
 Avoid turning all metadata into pills.
+
+---
+
+## 18.8 Section Header
+
+Section headers should establish clear hierarchy between major content groups.
+
+A section header may contain:
+
+* title
+* optional supporting text
+* optional contextual action
+
+Repeated section-header patterns should maintain consistent alignment and spacing.
+
+---
+
+## 18.9 Tabs
+
+Tabs may be used when multiple peer views occupy the same content context.
+
+Tabs should provide:
+
+* clear labels
+* visible selected state
+* keyboard accessibility
+* sufficient touch targets
+
+Tabs should not be used merely as decorative category labels.
+
+---
+
+## 18.10 Segmented Control
+
+Segmented controls may support switching between a small number of closely related views or modes.
+
+They should remain compact, clearly selected, and understandable without relying solely on color.
+
+Segmented controls should not become the default treatment for ordinary navigation.
+
+---
+
+## 18.11 Information Row
+
+Information rows may present structured label-value relationships compactly.
+
+They are appropriate for recurring recipe or coffee metadata where scanning is more useful than card presentation.
+
+---
+
+## 18.12 Action Row
+
+Action rows may group a small set of contextually related actions.
+
+Action hierarchy should remain clear and should avoid presenting every action with equal visual weight.
 
 ---
 
@@ -1564,13 +2302,7 @@ The initial component set may include the following.
 
 ## 20.1 Coffee Card
 
-A reusable Coffee Card may represent a coffee within:
-
-* discovery
-* search
-* favorites
-* geographical exploration
-* AI recommendations
+The Coffee Card represents a coffee in visually led discovery contexts.
 
 Potential content includes:
 
@@ -1581,11 +2313,62 @@ Potential content includes:
 * relevant secondary information
 * favorite action where applicable
 
-Exact anatomy should be finalized through wireframing.
+Coffee Cards may support recurring responsive variants.
+
+### Standard Coffee Card
+
+The standard variant is image-led and is appropriate for:
+
+* discovery
+* geographical exploration
+* recommendations
+* larger search presentations
+
+### Compact Coffee Card
+
+The compact variant reduces image and internal spacing while preserving the same primary information.
+
+It may be appropriate for:
+
+* smaller viewports
+* denser discovery layouts
+* recommendations
+* contexts where vertical space is limited
+
+Coffee Card variants should preserve consistent information hierarchy and interaction behavior.
+
+Exact anatomy should be validated through wireframing.
 
 ---
 
-## 20.2 Recipe Metadata
+## 20.2 Coffee Row
+
+The Coffee Row provides a denser alternative to the Coffee Card.
+
+It may be used for:
+
+* search results
+* favorites
+* compact recommendation lists
+* geography-based coffee lists
+* other information-dense contexts
+
+Potential anatomy includes:
+
+* optional thumbnail
+* coffee name
+* native name where appropriate
+* geographical or secondary information
+* favorite action where applicable
+* disclosure indicator where the entire row opens the coffee detail
+
+Coffee Rows should prioritize fast scanning and should not reproduce the full visual weight of a Coffee Card.
+
+Coffee Card and Coffee Row should represent the same coffee entity using context-appropriate density rather than competing information hierarchies.
+
+---
+
+## 20.3 Recipe Metadata
 
 Recipe metadata should present available structured information clearly and compactly.
 
@@ -1593,7 +2376,7 @@ Potential fields depend on Brewcipe's canonical data model.
 
 ---
 
-## 20.3 Ingredient List
+## 20.4 Ingredient List
 
 Ingredient presentation should prioritize:
 
@@ -1606,7 +2389,7 @@ Exact layout should follow actual recipe data.
 
 ---
 
-## 20.4 Preparation Step
+## 20.5 Preparation Step
 
 Ordered preparation instructions should clearly preserve sequence.
 
@@ -1625,7 +2408,7 @@ Pour the initial water.
 
 ---
 
-## 20.5 Favorite Control
+## 20.6 Favorite Control
 
 Favorite behavior should use one consistent pattern.
 
@@ -1660,6 +2443,19 @@ Feedback while an action is being activated.
 ## 21.5 Selected
 
 Communicates persistent selection or state.
+
+Selected states may use a combination of:
+
+* foreground treatment
+* background treatment
+* icon treatment
+* typographic emphasis
+* border or indicator
+* surface treatment
+
+Selection should remain recognizable without relying solely on color.
+
+Navigation, tabs, segmented controls, favorite controls, and other persistent selections should use consistent selected-state logic.
 
 ## 21.6 Disabled
 
@@ -1715,7 +2511,15 @@ Focus treatments should remain consistent across shared components.
 
 ## 22.5 Touch Targets
 
-Interactive controls should provide comfortable touch targets on mobile.
+Interactive controls should provide comfortable touch targets across touch-capable devices.
+
+Visible icons may remain visually compact while their surrounding interactive area provides a larger touch target.
+
+Navigation items, icon buttons, tabs, segmented controls, and other frequently used touch interactions require particular attention.
+
+Adjacent touch targets should provide sufficient separation to reduce accidental activation.
+
+Touch-target requirements should be validated against Brewcipe's WCAG 2.2 Level AA accessibility target during implementation.
 
 ---
 
@@ -1911,11 +2715,13 @@ Examples may include:
 
 ```text
 Button
+IconButton
 Input
 Link
 Surface
 Divider
 Icon
+Image
 ```
 
 ---
@@ -2035,6 +2841,11 @@ Before considering a Brewcipe interface ready for implementation or release, rev
 * Are established typography styles being used?
 * Is spacing drawn from the shared scale?
 * Are shape and border treatments consistent?
+* Are icons drawn from the established icon system?
+* Are icon sizes and visual weights consistent?
+* Are cards being used only where meaningful grouping or interaction requires them?
+* Could a compact list row communicate the content more efficiently?
+* Are navigation and selected states consistent?
 * Are existing components reused where possible?
 
 ---
@@ -2042,9 +2853,15 @@ Before considering a Brewcipe interface ready for implementation or release, rev
 ## 27.4 Responsive Behavior
 
 * Was the experience designed mobile first?
-* Does it adapt appropriately to larger screens?
+* Does it adapt deliberately across mobile, tablet, desktop, and wide desktop?
+* Does navigation transform appropriately for the available viewport?
+* Are primary destinations preserved across responsive navigation patterns?
+* Do discovery layouts use available horizontal space effectively?
+* Does reading-heavy content remain appropriately constrained?
+* Do components change density or arrangement where useful without changing their underlying purpose?
 * Are touch interactions comfortable?
 * Does content remain readable?
+* Does wide-screen content remain intentionally bounded rather than stretching indefinitely?
 
 ---
 
@@ -2091,8 +2908,69 @@ The system should be:
 * appropriate for multilingual coffee content
 * capable of supporting future themes without redesigning components
 
-The desired result is an interface that feels:
+The desired result is an interface that combines:
+
+* Brewcipe's dark, warm, editorial coffee identity
+* the clarity and efficiency of a modern application
+* compact, structured information where appropriate
+* comfortable reading experiences for recipes and cultural content
+* consistent icon-led interaction
+* responsive behavior across mobile, tablet, desktop, and wide desktop
+
+The interface should feel:
 
 > **crafted around coffee rather than assembled from generic UI patterns.**
 
+Application-oriented structure should strengthen Brewcipe's usability without replacing its distinctive visual identity with generic SaaS conventions.
+
 The design system should make good design decisions easier to repeat without adding complexity for its own sake.
+
+# 29. Product References
+
+## Visual Product References
+
+Brewcipe's interface direction is informed in part by selected patterns observed in the following coffee-focused digital products:
+
+* AeroPress Recipe  
+  https://aeroprecipe.com/images/weMakeCoffee_preview_01.webp
+
+* iBrew — app interface reference  
+  https://ibrew.coffee/assets/images/screenshots/app_01.png
+
+* iBrew — app interface reference  
+  https://ibrew.coffee/assets/images/screenshots/app_05.png
+
+These references are used as directional inspiration rather than templates to reproduce.
+
+Relevant qualities include:
+
+* compact, application-oriented interface structure
+* clear mobile navigation
+* icon-led primary actions and navigation
+* persistent bottom navigation where appropriate
+* strong page and application headers
+* efficient use of cards, rows, and structured information
+* clear grouping of metadata
+* restrained, utility-oriented controls
+* mobile-native interaction patterns
+* layouts that prioritize fast scanning and task completion
+
+Brewcipe should interpret these qualities through its own visual identity.
+
+Brewcipe should retain:
+
+* its dark-first visual system
+* warm coffee-oriented color palette
+* editorial typography
+* restrained use of surfaces and elevation
+* cultural and geographical emphasis
+* recipe-first information hierarchy
+* distinctive Brewcipe brand character
+
+Brewcipe should not reproduce the reference products literally.
+
+In particular, it should not adopt their light visual themes, exact navigation structure, exact component styling, typography, branding, or proprietary visual assets.
+
+The intended direction is:
+
+> Brewcipe's warm, dark, editorial identity combined with the clarity and efficiency of a modern coffee application.
