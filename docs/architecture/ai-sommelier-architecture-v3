@@ -1,0 +1,602 @@
+\# AI Sommelier Architecture V3
+
+
+
+\## 1. Purpose
+
+
+
+The Brewcipe AI Coffee Sommelier provides conversational coffee recommendations grounded in Brewcipe's canonical structured data.
+
+
+
+The LLM acts as a recommendation and conversational interface. It does not replace Brewcipe's database as the canonical source of recipe information.
+
+
+
+\---
+
+
+
+\## 2. LLM Provider
+
+
+
+\*\*Provider:\*\* Google Gemini
+
+
+
+\*\*SDK:\*\* Google GenAI SDK (`google-genai`)
+
+
+
+The Gemini API is called only from the Brewcipe backend.
+
+
+
+API credentials must remain server-side and must never be exposed to the frontend.
+
+
+
+\---
+
+
+
+\## 3. High-Level Flow
+
+
+
+```text
+
+User
+
+&#x20; ↓
+
+AI Sommelier interface
+
+&#x20; ↓
+
+FastAPI backend
+
+&#x20; ↓
+
+Retrieve relevant Brewcipe recipe candidates
+
+&#x20; ↓
+
+Format limited structured context
+
+&#x20; ↓
+
+Send user question + Brewcipe context to Gemini
+
+&#x20; ↓
+
+Gemini recommends several suitable recipes
+
+&#x20; ↓
+
+Backend validates recommendation identifiers
+
+&#x20; ↓
+
+Frontend displays recommendations
+
+&#x20; ↓
+
+User can:
+
+\- choose a recipe
+
+\- request another set of suggestions
+
+```
+
+
+
+\---
+
+
+
+\## 3A. Personalized Sommelier Context
+
+For authenticated users, the Sommelier may use the current personalization context built by the backend:
+
+```text
+Taste Profile
+     +
+Tried Recipes
+     +
+Skipped Recipes
+     +
+Relevant Brewcipe Candidates
+     ↓
+Controlled Gemini Request
+```
+
+The taste profile is the primary preference signal. Tried recipes provide evidence of what the user has explored or enjoyed, while skipped recipes provide avoidance evidence.
+
+Skipped recipe IDs are excluded from the Sommelier candidate pool before candidates are supplied to Gemini.
+
+The Sommelier uses this context to personalize conversational recommendations; Gemini does not own or persist the canonical taste model.
+
+## 4. Recommendation Boundaries
+
+
+
+\* The AI Sommelier may recommend only existing Brewcipe coffee records when presenting Brewcipe-specific recommendations.
+
+\* The AI must not invent coffee IDs, recipe IDs, recipe names, ingredients, instructions, geography, or source attribution.
+
+\* Brewcipe's structured database remains the canonical source for recipe facts.
+
+\* The LLM may explain why a Brewcipe record matches the user's preferences.
+
+\* If there is no strong Brewcipe match, the AI should say so rather than inventing one.
+
+\* The AI may offer the closest available Brewcipe matches when appropriate.
+
+\* General coffee advice may be conversational, but Brewcipe-specific factual claims must come from backend-provided context.
+
+\* Only a limited set of relevant Brewcipe records should be sent to Gemini, not the full production dataset.
+
+
+
+\---
+
+
+
+\## 4A. Personalization Rules
+
+The Sommelier should:
+
+* use the user's taste profile as the primary preference signal
+* treat tried recipes as evidence of prior exploration or enjoyment
+* treat skipped recipes as avoidance evidence
+* use interaction history to refine recommendations when relevant
+* recommend only from the backend-supplied candidate set
+
+---
+
+## 5. Grounding Strategy
+
+
+
+\* Retrieve candidate recipes from Brewcipe's canonical database before calling Gemini.
+
+\* Use structured Brewcipe metadata to select relevant candidates.
+
+\* Limit the number of records supplied to Gemini.
+
+\* Send only fields required for recommendation reasoning.
+
+\* Treat retrieved Brewcipe records as the sole source of Brewcipe-specific facts.
+
+\* Instruct Gemini to recommend only from the supplied candidate records.
+
+\* Return several suitable Brewcipe recommendations rather than a single recommendation.
+
+\* Present approximately three recommendations per response for the MVP.
+
+\* Require every recommendation to reference an existing Brewcipe identifier.
+
+\* Validate returned identifiers against the retrieved candidate set.
+
+\* Allow users to select any recommended recipe.
+
+\* Allow users to request another set of recommendations.
+
+\* When generating another set, avoid previously shown recommendations where suitable alternatives exist.
+
+\* Return an empty recommendation list when no suitable Brewcipe match exists.
+
+\* Do not send the entire production dataset to the LLM.
+
+
+
+\---
+
+
+
+\## 6. Candidate Selection Strategy
+
+
+
+1\. Receive the user's natural-language question.
+
+
+
+2\. Use the question to identify useful preference signals such as:
+
+
+
+&#x20;  \* geography: country, region, continent
+
+&#x20;  \* serving temperature: hot / cold / iced
+
+&#x20;  \* ingredients: milk, condensed milk, sugar, spices, etc.
+
+&#x20;  \* brewer or preparation method
+
+&#x20;  \* recipe type
+
+&#x20;  \* meal/context preferences where relevant
+
+
+
+3\. Retrieve a limited pool of Brewcipe recipes from the canonical database.
+
+
+
+4\. Include structured metadata for those candidates:
+
+
+
+&#x20;  \* `coffee\_recipe\_id`
+
+&#x20;  \* `english\_name`
+
+&#x20;  \* `native\_name`
+
+&#x20;  \* `transliteration`
+
+&#x20;  \* recipe type
+
+&#x20;  \* countries / region / continent
+
+&#x20;  \* brewers
+
+&#x20;  \* serving temperatures
+
+&#x20;  \* ingredient names
+
+&#x20;  \* associated meal / meal description
+
+
+
+5\. Do not include full recipe instructions or source data during recommendation selection unless they are specifically needed.
+
+
+
+6\. Send only this limited candidate pool to Gemini.
+
+
+
+7\. Gemini ranks the supplied candidates and recommends approximately three.
+
+
+
+8\. Validate every returned `coffee\_recipe\_id` against the supplied candidate set.
+
+
+
+9\. On \*\*Suggest Again\*\*, exclude previously shown IDs where enough alternatives remain.
+
+
+
+\---
+
+
+
+\## 7. AI Request Model
+
+
+
+The frontend submits a natural-language recommendation request.
+
+
+
+Example:
+
+
+
+```json
+
+{
+
+&#x20; "message": "I want something sweet and milky from Southeast Asia"
+
+}
+
+```
+
+
+
+The initial request model is:
+
+
+
+```text
+
+SommelierRequest
+
+\- message: string
+
+```
+
+
+
+The message is limited to a reasonable maximum length to control usage and prevent unnecessarily large LLM requests.
+
+
+
+\---
+
+
+
+\## 8. AI Response Model
+
+
+
+The backend returns conversational text together with grounded Brewcipe recommendations.
+
+
+
+Example structure:
+
+
+
+```json
+
+{
+
+&#x20; "answer": "Here are three Brewcipe coffees that fit what you're looking for.",
+
+&#x20; "recommendations": \[
+
+&#x20;   {
+
+&#x20;     "coffee\_id": "existing-brewcipe-uuid",
+
+&#x20;     "coffee\_recipe\_id": "existing-recipe-id",
+
+&#x20;     "english\_name": "Coffee name",
+
+&#x20;     "reason": "Why this recipe matches the user's preferences."
+
+&#x20;   }
+
+&#x20; ]
+
+}
+
+```
+
+
+
+The response models are:
+
+
+
+```text
+
+SommelierResponse
+
+\- answer: string
+
+\- recommendations: SommelierRecommendationResponse\[]
+
+
+
+SommelierRecommendationResponse
+
+\- coffee\_id: UUID
+
+\- coffee\_recipe\_id: string
+
+\- english\_name: string
+
+\- reason: string
+
+```
+
+
+
+The recommendation list may be empty when Brewcipe has no suitable match.
+
+
+
+\---
+
+
+
+\## 9. Context Minimisation
+
+
+
+Gemini should receive only the information required to make a useful recommendation.
+
+
+
+Recommendation context may include:
+
+
+
+\* recipe identifier
+
+\* coffee name
+
+\* recipe type
+
+\* geography
+
+\* brewer
+
+\* serving temperature
+
+\* ingredient names
+
+\* associated meal information where relevant
+
+
+
+The following should normally remain outside the LLM request:
+
+
+
+\* full recipe instructions
+
+\* source records
+
+\* unnecessary database identifiers
+
+\* unrelated production records
+
+\* the complete Brewcipe dataset
+
+
+
+This reduces unnecessary production-data exposure, request size, cost, and hallucination risk.
+
+
+
+\---
+
+
+
+\## 10. Suggest Again Behaviour
+
+
+
+The Sommelier should provide approximately three recommendations per response.
+
+
+
+After receiving recommendations, the user may:
+
+
+
+1\. choose a recommended recipe and navigate to its canonical Brewcipe recipe page, or
+
+2\. request another set of recommendations.
+
+
+
+When the user chooses \*\*Suggest Again\*\*:
+
+
+
+\* the original preference should remain applicable;
+
+\* previously shown recipes should be excluded where appropriate;
+
+\* suitable alternative Brewcipe candidates should be preferred;
+
+\* previously shown recipes may be reused only when there are insufficient relevant alternatives.
+
+
+
+\---
+
+
+
+\## 11. Planned Backend Components
+
+
+
+```text
+
+backend/app/
+
+├── api/routes/
+
+│   └── sommelier.py
+
+├── schemas/
+
+│   └── sommelier.py
+
+├── services/
+
+│   └── sommelier\_service.py
+
+└── core/
+
+&#x20;   └── config.py
+
+```
+
+
+
+Responsibilities:
+
+
+
+\### `schemas/sommelier.py`
+
+
+
+Defines the API request and response models.
+
+
+
+\### `services/sommelier\_service.py`
+
+
+
+Will handle:
+
+
+
+\* candidate retrieval
+
+\* context formatting
+
+\* Gemini requests
+
+\* recommendation validation
+
+\* Suggest Again exclusions
+
+\* provider error handling
+
+
+
+\### `api/routes/sommelier.py`
+
+
+
+Will expose the FastAPI endpoint used by the frontend.
+
+
+
+\### `core/config.py`
+
+
+
+Will provide server-side Gemini configuration.
+
+
+
+\---
+
+
+
+\## 12. Remaining Architecture Decisions
+
+
+
+The following will be documented as Phase 8 implementation continues:
+
+
+
+\* exact candidate retrieval implementation
+
+\* Gemini prompt structure
+
+\* structured Gemini output handling
+
+\* timeout behaviour
+
+\* provider error handling
+
+\* usage controls
+
+\* recommendation validation logic
+
+\* Suggest Again state handling
+
+\* frontend Sommelier interaction flow
+
+
+
