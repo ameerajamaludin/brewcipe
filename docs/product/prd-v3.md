@@ -19,11 +19,9 @@
 
 ### Product Summary
 
-Brewcipe is a global coffee recipe discovery platform that allows users to explore coffee drinks, brewing traditions, preparation methods, and cultural context from around the world.
+Brewcipe is a personalized coffee discovery web app that recommends what to brew based on the user's preferences, equipment, saved recipes and brewing history.
 
-The platform combines structured coffee recipe data, geographical discovery, search and filtering, user favorites, source attribution, and AI-assisted coffee discovery.
-
-The application uses a React frontend, FastAPI backend, Supabase PostgreSQL database, and an LLM API for the AI Coffee Sommelier.
+This web app combines structured coffee recipe data, geographical discovery, search and filtering, user favorites, source attribution, and AI-assisted coffee discovery. It uses a React frontend, FastAPI backend, Supabase PostgreSQL database, and an LLM API for the AI Coffee Sommelier.
 
 The production coffee dataset is privately maintained and stored in Supabase. The complete dataset and private data-preparation artifacts are intentionally excluded from the public repository.
 
@@ -62,7 +60,7 @@ Quantitative product metrics can be established after deployment and real user t
 | Make recipes understandable     | Recipe pages consistently present available ingredients, instructions, brewing information, and context |
 | Support direct discovery        | Users can search for coffee recipes                                                                     |
 | Support geographical discovery  | Users can explore coffees through country or regional relationships                                     |
-| Support personalization         | Authenticated users can save and remove favorites                                                       |
+| Support personalization         | Authenticated users can maintain a taste profile and receive recommendations informed by their preferences and recipe interactions |
 | Provide AI-assisted discovery   | Users can ask the AI Coffee Sommelier for recommendations grounded in Brewcipe data                     |
 | Preserve provenance             | Coffee records can maintain source attribution where available                                          |
 | Protect private product data    | Production datasets and credentials are excluded from the public repository                             |
@@ -333,25 +331,31 @@ The system must:
 
 ### User Story
 
-As a returning user, I want an account so that Brewcipe can provide user-specific functionality such as saved favorites.
+As a returning user, I want an account and convenient sign-in options so that Brewcipe can provide user-specific functionality such as saved favorites.
 
 ### Requirements
 
 The system should support:
 
-* registration
-* login
+* registration using email and password
+* login using email and password
+* authentication using Google Sign-In
 * logout
 * authenticated sessions
 * protected user-specific operations
 
+Authentication should be implemented using Supabase Auth.
+
 ### Acceptance Criteria
 
-* users can create an account
-* valid users can authenticate
+* users can create an account using supported registration methods
+* registered users can authenticate using valid email and password credentials
+* users can authenticate using a supported Google account
+* Google authentication is handled through Supabase Auth
 * authenticated state can be determined by the application
+* users can log out
 * protected actions require authentication
-
+* failed or cancelled authentication attempts display appropriate feedback
 ---
 
 ## 6.6 Favorites
@@ -379,6 +383,51 @@ Authenticated users should be able to:
 * favorites persist in the database
 
 ---
+
+## 6.6A Taste Profile and Personal Discovery Mechanic
+
+**MoSCoW Priority:** Should Have
+
+### User Story
+
+As a returning user, I want Brewcipe to learn from my stated preferences and coffee interactions so that recommendations become more relevant over time.
+
+### Product Mechanic
+
+```text
+Taste Model
+     ↓
+Saved Coffees + Coffee History + User Signals
+     ↓
+Recommendation Engine
+     ↓
+Personalized Home + Sommelier
+     ↓
+User interacts
+     ↓
+Taste model evolves
+```
+
+### Requirements
+
+Brewcipe should:
+
+* establish an initial taste model from explicit preferences
+* use brewer and discovery preferences as recommendation constraints
+* record meaningful recipe interactions such as saved, tried, and skipped where those capabilities are implemented
+* derive qualitative recommendation signals from structured recipe data
+* use observed interactions to refine future recommendation ranking
+* keep recommendation scoring deterministic and testable
+* allow the Sommelier to use the user's current personalization context
+* keep canonical recipe facts separate from derived recommendation signals
+
+The mechanic should not imply that Brewcipe has validated numeric taste dimensions when the canonical dataset does not contain them.
+
+The detailed product and system mechanic is defined in `taste-profile-mechanic-v1.md`.
+
+---
+
+
 
 ## 6.7 AI Coffee Sommelier
 
@@ -515,7 +564,7 @@ The current MVP is designed around the following technology choices.
 | Backend        | FastAPI, Python                 | APIs, validation, business logic and AI orchestration |
 | Database       | Supabase PostgreSQL             | Canonical application data and relational integrity   |
 | Authentication | Supabase Auth                   | User authentication                                   |
-| AI             | LLM API via backend             | Conversational recommendations                        |
+| AI             | Google Gemini via backend       | Conversational recommendations                        |
 
 ### Security Constraints
 
@@ -565,8 +614,8 @@ Open questions should be recorded rather than silently converted into requiremen
 | Which search filters are necessary beyond basic text search for MVP?                                 | Open   | TBD      |
 | Should geographical exploration use an interactive map in MVP or a simpler region/country interface? | Open   | TBD      |
 | How much cultural context should appear directly on recipe cards versus recipe-detail pages?         | Open   | TBD      |
-| Which LLM provider will be used for the AI Coffee Sommelier?                                         | Open   | TBD      |
-| What amount of Brewcipe context should be supplied to the LLM for each recommendation request?       | Open   | TBD      |
+| Which LLM provider will be used for the AI Coffee Sommelier?                                         | Resolved | Google Gemini |
+| What amount of Brewcipe context should be supplied to the LLM for each recommendation request?       | Open   | Limited relevant candidate context |
 | Should source attribution be visible directly on recipe pages in MVP?                                | Open   | TBD      |
 
 Questions should be updated with their decision when resolved.
@@ -606,8 +655,8 @@ Their inclusion in this section does not represent a committed requirement or de
 * related coffee recommendations
 * recipe comparison
 * multilingual interfaces
-* personalized recommendation profiles
-* recommendation signals based on user preferences and interactions
+* deeper personalized recommendation profiles
+* richer recommendation signals based on user preferences and interactions
 * community recipe contributions
 * admin moderation workflows
 * brewing equipment recommendations
