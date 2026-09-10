@@ -2206,6 +2206,36 @@ or canonical production records.
 
 ---
 
+# 54A. Derived Recipe Intelligence Signals
+
+Brewcipe's recommendation system may derive application-level signals from canonical recipe fields.
+
+These signals are **not canonical dataset fields** and should not be presented as source-stated facts unless the underlying recipe data supports the claim.
+
+Current derived signals include:
+
+```text
+sweet
+milky
+strong
+spiced
+chocolate
+nutty
+citrus
+fruity
+herbal
+hot
+iced
+simple
+dessert_like
+```
+
+The signals support recommendation ranking and personalization. They are deterministic application features and should not be confused with validated sensory measurements such as numeric sweetness, acidity, or body scores.
+
+The detailed personalization behavior is defined in `docs/product/taste-profile-mechanic-v1.md`.
+
+---
+
 # 55. Logical vs Relational Model
 
 The current JSON structure is designed for curation and readability.
