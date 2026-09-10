@@ -24,9 +24,11 @@ Product scope and system behavior are defined separately in:
 
 # 2. Design Vision
 
-Brewcipe should feel like a **modern digital coffee companion**: warm, knowledgeable, culturally curious, and rooted in coffee.
+Brewcipe should feel like a **modern digital coffee companion** that combines the character of an editorial coffee guide with the clarity and efficiency of a contemporary coffee utility or application.
 
-The experience should combine the clarity of a modern web application with inspiration from:
+The experience should feel warm, knowledgeable, culturally curious, practical, and rooted in coffee.
+
+Its visual and interaction direction may draw inspiration from:
 
 * specialty coffee culture
 * brewing guides
@@ -35,12 +37,65 @@ The experience should combine the clarity of a modern web application with inspi
 * café menus
 * coffee packaging
 * editorial food and drink design
+* modern coffee applications
+* compact mobile utility interfaces
+* structured reference and discovery tools
 
-The interface should have a recognizable identity that makes sense specifically for a product about coffee.
+Brewcipe should balance two complementary qualities:
 
-Brewcipe should not feel like a generic technology product with coffee content placed on top of it.
+```text
+Editorial Coffee Experience
+        +
+Modern Coffee Utility
+```
 
-The coffee, its preparation, and its cultural context should remain the focus of the experience.
+## 2.1 Reference Direction
+
+Selected coffee-focused digital products may be used as directional references for Brewcipe's application structure and interaction patterns.
+
+Current reference examples include:
+
+* AeroPress Recipe  
+  https://aeroprecipe.com/images/weMakeCoffee_preview_01.webp
+
+* iBrew  
+  https://ibrew.coffee/assets/images/screenshots/app_01.png
+
+* iBrew  
+  https://ibrew.coffee/assets/images/screenshots/app_05.png
+
+These references should inform Brewcipe selectively rather than be reproduced literally.
+
+Relevant qualities may include:
+
+* compact application-oriented layouts
+* clear mobile navigation
+* icon-led navigation and actions
+* persistent bottom navigation where appropriate
+* strong page and application headers
+* efficient use of cards and list rows
+* structured presentation of coffee information
+* clear metadata grouping
+* mobile-native interaction patterns
+* interfaces optimized for quick scanning and task completion
+
+Brewcipe should interpret these patterns through its own visual identity.
+
+The reference products should not determine Brewcipe's:
+
+* color palette
+* typography
+* branding
+* exact navigation hierarchy
+* exact component styling
+* proprietary visual assets
+* product functionality
+
+In particular, Brewcipe should retain its dark-first visual direction, warm coffee-oriented palette, editorial typography, restrained surface treatment, cultural emphasis, and coffee-first information hierarchy.
+
+The intended result is not to make Brewcipe look like another coffee application.
+
+The intended result is to combine Brewcipe's distinctive editorial identity with the usability and clarity expected from a modern coffee application.
 
 ---
 
@@ -154,13 +209,26 @@ Brewcipe should feel:
 
 **Editorial, but practical.**
 
+**Application-oriented, but not utilitarian or sterile.**
+
+**Compact where useful, but not crowded.**
+
 **Considered, but approachable.**
 
 **Coffee-inspired, but not clichéd.**
 
 **Culturally curious, without exoticizing coffee traditions.**
 
-The overall experience should feel closer to a thoughtfully designed coffee guide, brewing journal, café publication, or recipe collection than a generic SaaS application.
+The overall experience should sit between:
+
+* a thoughtfully designed coffee guide
+* a brewing journal or café publication
+* a structured recipe collection
+* a modern coffee discovery and brewing utility
+
+Brewcipe should have enough editorial character to feel distinctive and enough application structure to feel fast, navigable, and useful.
+
+It should not resemble a generic SaaS dashboard, generic content publication, or generic mobile utility.
 
 ---
 
@@ -243,6 +311,8 @@ The interface should preserve Unicode characters correctly and avoid treating na
 
 ## 5.4 Shape and Surface Direction
 
+Brewcipe should favor structured, relatively flat application surfaces rather than excessive floating containers.
+
 Cards and containers should be used when they improve:
 
 * grouping
@@ -250,12 +320,25 @@ Cards and containers should be used when they improve:
 * interaction
 * separation
 * scannability
+* visual discovery
 
-Not every section needs to exist inside a card.
+Not every section or repeated item needs to exist inside a card.
+
+Compact rows, dividers, typography, spacing, and alignment may be more appropriate for information-dense contexts such as:
+
+* search results
+* favorites
+* geographical navigation
+* metadata
+* compact recommendations
+
+Cards should remain useful for visually led coffee discovery but should not become Brewcipe's default container for every type of information.
 
 Brewcipe should avoid creating visual complexity by placing every piece of information inside separate floating containers.
 
 Surface treatments should remain restrained and support content hierarchy.
+
+The application should feel structured and tactile without becoming a dashboard composed of stacked panels.
 
 Exact border radius, border, elevation, and shadow treatments belong to the design system.
 
@@ -265,6 +348,25 @@ Exact border radius, border, elevation, and shadow treatments belong to the desi
 
 Layouts should feel calm and readable while making efficient use of available space.
 
+Brewcipe should support different levels of interface density according to context.
+
+Application-oriented areas may use more compact spacing to support:
+
+* navigation
+* search
+* metadata
+* list rows
+* geography
+* repeated coffee results
+* utility controls
+
+Reading-heavy areas should remain more spacious, particularly:
+
+* recipe instructions
+* cultural context
+* descriptive content
+* major editorial sections
+
 Spacing should support:
 
 * clear visual hierarchy
@@ -273,8 +375,14 @@ Spacing should support:
 * predictable grouping
 * separation between related and unrelated content
 * efficient mobile layouts
+* fast visual scanning
+* responsive adaptation
+
+Compactness should improve usability without making the interface feel crowded.
 
 Desktop layouts may use additional horizontal space while preserving the hierarchy established on mobile.
+
+Large screens should generally increase useful layout capacity and whitespace before excessively increasing individual component widths.
 
 Exact spacing values belong to the design system.
 
@@ -306,28 +414,39 @@ Meaningful imagery should include appropriate alternative text.
 
 # 7. Iconography
 
-Icons should be used when they improve recognition, navigation, or interface efficiency.
+Iconography should play a stronger functional role in Brewcipe's application interface.
 
-Potential applications include:
+Icons may support:
 
+* primary navigation
 * favorites
 * search
-* navigation
+* back navigation
+* account access
+* contextual actions
 * servings
 * temperature
 * brewing information where applicable
 
-Icons should not be added solely as decoration.
+Primary mobile navigation may pair recognizable icons with concise text labels to improve scanning and reduce navigation friction.
 
-The interface should use a consistent icon family and visual treatment.
+Icons should support interface efficiency without becoming decorative coffee-themed illustrations.
+
+The interface should use a consistent icon family, visual weight, and treatment.
+
+Coffee-specific icons may be used where they communicate meaningful information, such as brewing methods or recurring coffee attributes.
 
 Text should be preferred when an icon alone would make an action ambiguous.
+
+Icon-led interaction should make Brewcipe feel more efficient and application-oriented while remaining visually restrained.
 
 ---
 
 # 8. Coffee Discovery Experience
 
 Coffee discovery should encourage exploration without overwhelming users.
+
+The experience should combine visual discovery with the efficiency of a structured application.
 
 The core discovery experience should support the product requirements for:
 
@@ -337,6 +456,14 @@ The core discovery experience should support the product requirements for:
 * navigation into individual recipes
 
 Discovery interfaces should make individual coffees easy to distinguish and should provide clear pathways into recipe details.
+
+Different presentation densities may be appropriate depending on context.
+
+Image-led Coffee Cards may support broader visual exploration, while more compact Coffee Rows may support scanning-heavy contexts such as search results, favorites, or geographical coffee lists.
+
+Search and navigation should remain easy to reach rather than being buried beneath editorial content.
+
+The discovery experience should feel inviting and expressive without requiring users to navigate through unnecessary presentation before reaching useful coffee information.
 
 Future filtering, richer geographical visualization, or recommendation features should extend this experience without requiring the core discovery interface to be redesigned fundamentally.
 
@@ -487,6 +614,10 @@ Detailed accessibility implementation and component behavior should be defined t
 
 # 16. Responsive Direction
 
+Brewcipe should be mobile first and responsive throughout.
+
+The same product hierarchy should adapt deliberately across mobile, tablet, desktop, and wide desktop rather than producing unrelated layouts for each device class.
+
 ## Mobile
 
 Mobile is the primary design starting point.
@@ -495,25 +626,72 @@ Prioritize:
 
 * single-column reading where appropriate
 * comfortable touch interaction
-* concise navigation
+* persistent access to primary navigation
+* compact application headers
+* icon-led navigation where appropriate
 * easy recipe scanning
 * accessible search
 * clear primary actions
+* efficient use of limited vertical and horizontal space
+
+Persistent bottom navigation is the preferred mobile direction for primary application destinations, subject to validation through information architecture and usability testing.
 
 ## Tablet
 
-Tablet layouts may progressively introduce additional columns or supporting information where space permits.
+Tablet should progressively enhance the mobile experience rather than merely enlarge it.
+
+Tablet layouts may introduce:
+
+* additional columns
+* wider cards and rows
+* increased information density
+* selective split layouts
+* larger content regions
+* adaptive navigation
+
+Smaller tablet layouts may retain mobile navigation patterns where they remain effective.
+
+Larger tablet layouts may transition toward desktop navigation when sufficient horizontal space is available.
 
 ## Desktop
 
 Desktop layouts may make greater use of:
 
+* persistent desktop navigation
 * content grids
-* wider recipe layouts
-* additional supporting content
-* expanded navigation where useful
+* wider discovery layouts
+* multi-column content where useful
+* selective split-detail layouts
+* additional supporting information
+* larger but constrained application containers
 
-Desktop should remain an extension of the mobile experience rather than become a separate visual system.
+Mobile bottom navigation should transform into an appropriate desktop navigation pattern rather than simply being stretched or removed without replacement.
+
+Reading-heavy content should remain constrained even when the surrounding application layout becomes wider.
+
+## Wide Desktop
+
+Wide desktop layouts should use additional space deliberately.
+
+The interface may introduce:
+
+* additional discovery columns
+* larger surrounding whitespace
+* broader application containers
+
+Reading widths and individual component sizes should remain controlled.
+
+Wide screens should not cause Brewcipe's content to stretch indefinitely.
+
+Across all viewport sizes, Brewcipe should preserve:
+
+* content hierarchy
+* terminology
+* primary destinations
+* canonical coffee and recipe routes
+* recognizable interaction patterns
+
+Responsive presentation may change while the underlying product model remains consistent.
 
 ---
 
@@ -521,19 +699,40 @@ Desktop should remain an extension of the mobile experience rather than become a
 
 Brewcipe should favor reusable interface patterns over page-specific solutions.
 
-Common patterns may eventually include:
+The interface should support both visually led editorial patterns and compact application patterns.
 
+Common patterns may include:
+
+* application headers
+* responsive primary navigation
+* mobile bottom navigation
+* desktop navigation
 * coffee cards
+* compact coffee rows
+* geographical rows
+* section headers
 * recipe information groups
 * ingredient lists
 * preparation steps
-* geographical navigation
 * search inputs
 * favorite controls
+* icon buttons
+* tabs or segmented controls where appropriate
 * loading states
 * error states
 * empty states
 * AI recommendation presentation
+
+Not every pattern should appear everywhere.
+
+The appropriate pattern should be selected according to the content and interaction need.
+
+For example:
+
+* Coffee Cards may support image-led exploration.
+* Coffee Rows may support dense scanning.
+* Editorial spacing may support recipe and cultural content.
+* Compact controls may support navigation and utility interactions.
 
 These represent design roles rather than finalized component specifications.
 
@@ -562,6 +761,12 @@ Brewcipe should avoid:
 * visual decoration that competes with recipe information
 * cultural imagery used without meaningful relevance
 * interfaces that make AI appear more important than coffee
+* overly spacious editorial layouts that make common actions inefficient
+* treating every repeated item as a large card
+* mobile navigation hidden behind unnecessary menus when persistent access would be clearer
+* desktop layouts that simply stretch mobile components across wider screens
+* utility interfaces so dense that recipe readability suffers
+* copying another coffee application's visual identity or navigation structure literally
 
 ---
 
@@ -596,10 +801,23 @@ If the broader visual or experience philosophy changes, this document should be 
 
 When someone opens Brewcipe, the experience should communicate:
 
-> **This is a product made for people who enjoy exploring coffee.**
+> **This is a product made for people who enjoy exploring, understanding, and preparing coffee.**
 
-It should feel closer to a thoughtfully designed coffee guide, brewing journal, café publication, or recipe collection than a generic technology dashboard.
+Brewcipe should feel like the meeting point between:
 
-Technology, including AI, should support that experience quietly.
+* a thoughtfully designed coffee guide
+* a brewing journal or café publication
+* a structured recipe collection
+* a modern coffee discovery and brewing utility
+
+The interface should provide enough editorial character to feel warm, distinctive, and rooted in coffee while remaining sufficiently compact, structured, and navigable to function as an everyday application.
+
+Users should be able to move quickly between discovery, search, geography, recommendations, saved coffees, and recipe information without the product losing its editorial character.
+
+Brewcipe's dark-first visual direction should remain central to this identity.
+
+Technology, including AI, should support the experience quietly.
+
+Application efficiency should support the coffee rather than compete with it.
 
 **Coffee remains the main character.**
