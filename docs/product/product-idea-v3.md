@@ -2,9 +2,9 @@
 
 ## Overview
 
-Brewcipe is a global coffee recipe discovery platform designed to help users explore coffee drinks, brewing traditions, and preparation methods from around the world.
+Brewcipe is a personalized coffee discovery web app that recommends what to brew based on the user's preferences, equipment, saved recipes and brewing history.
 
-The platform combines structured coffee recipe data, geographical discovery, cultural context, and personalized recommendations to make coffee exploration more accessible and engaging.
+This web app combines structured coffee recipe data, geographical discovery, cultural context, and personalized recommendations to make coffee exploration more accessible and engaging.
 
 Brewcipe is designed both as a consumer-facing coffee discovery product and as a portfolio project demonstrating product thinking, UX design, data modelling, system design, and full-stack application development.
 
@@ -103,6 +103,45 @@ Users can discover recipes based on attributes such as:
 * region
 * brewing method
 * recipe type
+
+### User Accounts
+
+Users can create and access Brewcipe accounts using supported authentication methods.
+
+For the MVP, authentication may include:
+
+* email and password
+* Google Sign-In
+
+Authentication is provided through Supabase Auth and enables user-specific features such as saved favorites.
+
+### Personal Coffee Discovery
+
+Brewcipe 2.0 extends saved coffees and coffee history into a personal discovery loop.
+
+The product uses a Taste Profile Mechanic rather than treating personalization as a static settings form:
+
+```text
+Taste Model
+     ↓
+Saved Coffees + Coffee History + User Signals
+     ↓
+Recommendation Engine
+     ↓
+Personalized Home + Sommelier
+     ↓
+User interaction
+     ↓
+Taste model evolves
+```
+
+The taste model begins with explicit user preferences and discovery constraints. As users save, try, or skip coffees, Brewcipe can derive additional signals from those interactions and improve future recommendations.
+
+The recommendation engine remains deterministic and grounded in Brewcipe's structured recipe data. The AI Coffee Sommelier sits above that system as a conversational interface that can use the user's current personalization context.
+
+The detailed mechanic is defined in `taste-profile-mechanic-v1.md`.
+
+
 
 ### Favorites
 
