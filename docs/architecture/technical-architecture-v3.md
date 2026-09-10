@@ -63,6 +63,7 @@ The following are Should Have capabilities:
 ```text
 Authentication
 Favorites
+Taste Profile & Personalization
 AI Coffee Sommelier
 ```
 
@@ -1045,6 +1046,64 @@ Privileged credentials must be supplied through secure environment configuration
 
 ---
 
+# 30. Personalization Architecture
+
+Brewcipe's Taste Profile Mechanic is implemented as deterministic application logic that combines explicit user preferences with observed recipe interactions.
+
+Conceptually:
+
+```text
+                    Taste Model
+                         │
+          ┌──────────────┼──────────────┐
+          ↓              ↓              ↓
+     Saved Coffees   Coffee History  User Signals
+          │              │              │
+          └──────────────┼──────────────┘
+                         ↓
+                Recommendation Engine
+                         │
+              ┌──────────┴──────────┐
+              ↓                     ↓
+      Personalized Home       Sommelier Context
+```
+
+## 30.1 Deterministic Recommendation Layer
+
+The recommendation engine should remain independent of the LLM provider.
+
+It uses:
+
+* taste-profile preferences
+* brewer preferences
+* discovery style
+* derived recipe-intelligence signals
+* tried-history affinity
+* skipped-recipe exclusions
+
+The current implementation derives qualitative recipe-intelligence signals from structured recipe data. These signals are application features and do not modify canonical recipe records.
+
+## 30.2 User-Specific Data
+
+User taste profiles and recipe interactions are stored in Supabase and associated with the authenticated user's UUID.
+
+Current interaction types are:
+
+```text
+tried
+skipped
+```
+
+Favorites remain the saved-coffee relationship. Favorite weighting in recommendation ranking is a planned continuation of the mechanic.
+
+## 30.3 Sommelier Boundary
+
+The Sommelier receives the current personalization context through the backend. Gemini provides conversational recommendation and explanation, but it does not calculate or own the canonical taste model.
+
+The detailed product mechanic is defined in `docs/product/taste-profile-mechanic-v1.md`.
+
+---
+
 # 30. AI Coffee Sommelier
 
 The AI Coffee Sommelier is a Should Have capability.
@@ -1071,11 +1130,11 @@ where a relevant Brewcipe recipe exists.
 
 ---
 
-# 31. LLM Provider
+## 31. LLM Provider
 
 ## Status
 
-**TBD**
+**Implemented — Google Gemini**
 
 The specific LLM provider and model have not yet been finalized.
 
@@ -1101,6 +1160,8 @@ Sommelier API Request
 FastAPI
   ↓
 Sommelier Service
+  │
+  ├── Retrieve Personalized User Context
   │
   ├── Retrieve Relevant Brewcipe Data
   │
@@ -1957,13 +2018,13 @@ Examples could include email/password or supported OAuth providers, but no speci
 
 ## TA-TBD-005 — LLM Provider
 
-Which LLM provider and model will power the AI Coffee Sommelier?
+**Resolved:** Google Gemini is the current LLM provider and is called through the backend.
 
 ---
 
 ## TA-TBD-006 — Sommelier Retrieval
 
-How will relevant Brewcipe records be selected and supplied as grounding context for AI recommendations?
+**Current implementation:** the backend retrieves a limited candidate set and supplies structured recipe summaries plus personalized user context to Gemini. Further retrieval improvements remain open.
 
 ---
 
