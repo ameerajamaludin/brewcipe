@@ -14,9 +14,11 @@ It describes:
 * how users move between coffee discovery experiences
 * how geographical coffee information is organized
 * which experiences are public or authenticated
-* the relationship between search, discovery, recipes, favorites, and the AI Coffee Sommelier
+* the relationship between search, discovery, recipes, favorites, account access, and the AI Coffee Sommelier
+* the hierarchy of primary, secondary, and contextual navigation
+* how navigation relationships remain consistent across responsive layouts
 
-This document defines **information structure and navigation relationships**, not detailed page layouts or visual styling.
+This document defines **information structure, destination hierarchy, and navigation relationships**, not detailed page layouts or visual styling.
 
 ---
 
@@ -30,9 +32,10 @@ This document covers the current Brewcipe MVP capabilities:
 * geographical exploration
 * authentication
 * favorites
+* account access
 * AI Coffee Sommelier
 
-Detailed visual presentation belongs in:
+Detailed visual presentation and responsive component behavior belong in:
 
 * `design-direction-v3.md`
 * `design-system-v3.md`
@@ -53,7 +56,9 @@ Technical routes and implementation details belong in Brewcipe's frontend and te
 
 Brewcipe should organize the application around coffee discovery and recipe information.
 
-Supporting features such as accounts and favorites should not dominate the product structure.
+Supporting features such as accounts, authentication, and favorites should not dominate the product structure.
+
+Primary navigation should make Brewcipe's main coffee-discovery paths easy to reach.
 
 ---
 
@@ -68,6 +73,7 @@ Public experiences include:
 * geographical exploration
 * opening recipe details
 * using public discovery experiences
+* using the AI Coffee Sommelier where included in the release
 
 Authentication should only be required when functionality depends on persistent user-specific data.
 
@@ -82,7 +88,7 @@ For example:
 ```text
 "I want to browse."
         ↓
-Coffee Discovery
+Discover
 
 "I know the coffee name."
         ↓
@@ -141,6 +147,37 @@ The AI Coffee Sommelier should supplement normal discovery and search.
 
 Core coffee content must remain accessible without using AI.
 
+AI recommendations should lead users back into Brewcipe's canonical coffee and recipe content wherever a relevant Brewcipe coffee exists.
+
+---
+
+## 2.8 Navigation Should Preserve the User's Mental Model
+
+Brewcipe may present navigation differently across mobile, tablet, desktop, and wide desktop layouts.
+
+The underlying destination hierarchy should remain consistent.
+
+A destination should not change meaning merely because its icon, position, or responsive presentation changes.
+
+---
+
+## 2.9 Primary and Contextual Navigation Should Remain Distinct
+
+Primary navigation should provide access to Brewcipe's major product areas.
+
+Contextual navigation should help users move within a specific hierarchy, task, or content relationship.
+
+Examples of contextual navigation include:
+
+* back navigation
+* geographical hierarchy
+* breadcrumbs
+* tabs
+* section navigation
+* links between related geographic entities
+
+Contextual navigation should not compete with or unnecessarily duplicate primary navigation.
+
 ---
 
 # 3. High-Level Product Structure
@@ -174,12 +211,20 @@ Brewcipe
 ├── Favorites
 │   └── Coffee / Recipe Detail
 │
+├── Account Access
+│   ├── Authentication
+│   └── Logout
+│
 └── Authentication
+    ├── Registration
+    └── Login
 ```
 
 Authentication and Favorites are **Should Have** capabilities.
 
 If they are deferred from the first MVP release, the core Coffee Discovery, Recipe Detail, Search, and Geographical Exploration structure remains intact.
+
+Account Access should remain lightweight for the MVP and should not imply a full user-profile system.
 
 ---
 
@@ -217,13 +262,37 @@ Coffee
 
 Not every coffee must contain every optional field.
 
+The information architecture should not require unavailable fields to be represented in the interface.
+
 ---
 
-# 5. Primary Navigation Model
+# 5. Navigation Architecture
 
-The final navigation component and exact labels should be validated during wireframing.
+## 5.1 Navigation Hierarchy
 
-At the information-architecture level, Brewcipe requires persistent access to the major product areas:
+Brewcipe should distinguish between three navigation levels:
+
+```text
+Primary Navigation
+        ↓
+Major Brewcipe destinations
+
+Secondary Navigation
+        ↓
+Entry points and related areas within a destination
+
+Contextual Navigation
+        ↓
+Movement within a hierarchy, detail view, or task
+```
+
+This distinction should remain consistent even when the visual presentation changes across screen sizes.
+
+---
+
+## 5.2 Primary Product Destinations
+
+At the information-architecture level, Brewcipe's major product destinations are:
 
 ```text
 Home
@@ -234,14 +303,151 @@ Favorites
 Account / Authentication
 ```
 
-However:
+These represent product destinations rather than a requirement that all six appear with equal visual prominence in every navigation component.
 
-* Favorites only requires prominent navigation if the feature is included in the release
-* account access may be separated from the primary content navigation
-* Search may be represented as a dedicated destination, a global action, or both
-* the AI Coffee Sommelier may use a shorter interface label such as `Ask`
+---
 
-The exact mobile and desktop presentation should not be fixed by the IA document.
+## 5.3 Primary Navigation Priority
+
+The strongest navigation priority should remain coffee discovery.
+
+Conceptually:
+
+```text
+Primary Coffee Experiences
+
+Home
+Discover
+Search
+AI Coffee Sommelier
+```
+
+User-specific destinations include:
+
+```text
+Favorites
+Account / Authentication
+```
+
+Favorites should become prominently accessible when the feature is included in the release.
+
+Account access may remain visually separate from coffee-oriented navigation.
+
+---
+
+## 5.4 Mobile Navigation Model
+
+The preferred mobile navigation model is persistent bottom navigation for a restrained set of Brewcipe's most important destinations.
+
+The IA does not prescribe the exact visual component, icon family, spacing, or styling.
+
+The mobile navigation should prioritize destinations that users need to move between frequently.
+
+A working hierarchy is:
+
+```text
+Home
+Discover
+Search
+Sommelier
+Favorites
+```
+
+where the corresponding capabilities are included in the release.
+
+`AI Coffee Sommelier` may use the shorter navigation label:
+
+```text
+Ask
+```
+
+if that terminology is validated and used consistently.
+
+Account / Authentication does not need to consume one of the primary mobile navigation positions if it remains clearly accessible through the application header or another persistent account entry point.
+
+If Favorites is not included in a release, it should be removed rather than replaced with an unrelated destination merely to preserve a fixed number of navigation items.
+
+---
+
+## 5.5 Tablet Navigation Model
+
+Tablet should preserve the same destination hierarchy.
+
+Smaller tablet layouts may continue using the mobile primary-navigation model.
+
+Larger tablet layouts may transition to the desktop navigation presentation when sufficient space is available.
+
+This transition should change presentation rather than information hierarchy.
+
+---
+
+## 5.6 Desktop Navigation Model
+
+Desktop and wide-desktop layouts should expose Brewcipe's primary destinations through persistent larger-screen navigation.
+
+Conceptually:
+
+```text
+Brewcipe
+
+Home
+Discover
+Search
+Sommelier
+Favorites
+
+Account / Authentication
+```
+
+Account access may remain visually separated from the primary coffee-oriented destinations.
+
+The exact desktop presentation belongs to the design system and wireframes.
+
+The IA does not require a particular header, navigation rail, icon treatment, or responsive breakpoint.
+
+---
+
+## 5.7 Search in Navigation
+
+Search is a core Brewcipe discovery path.
+
+It should remain directly accessible through primary navigation or an equivalently prominent global search action.
+
+Search may therefore exist as:
+
+```text
+Dedicated Search Destination
+
+and/or
+
+Persistent Global Search Action
+```
+
+These presentations may coexist if they lead into the same underlying search experience.
+
+Search should not become a separate content system.
+
+---
+
+## 5.8 Account Access
+
+Account / Authentication should remain accessible without competing with Brewcipe's primary coffee-discovery destinations.
+
+Depending on authentication state:
+
+```text
+Unauthenticated
+        ↓
+Sign In / Authentication
+
+Authenticated
+        ↓
+Account Access
+        ├── Favorites where appropriate
+        └── Logout
+```
+
+A full profile-management destination is not required for the MVP.
 
 ---
 
@@ -251,7 +457,7 @@ The exact mobile and desktop presentation should not be fixed by the IA document
 
 Home acts as Brewcipe's primary entry point.
 
-It should help users begin discovering coffee without requiring them to understand the complete site structure.
+It should help users begin discovering coffee without requiring them to understand the complete application structure.
 
 ---
 
@@ -262,13 +468,16 @@ Home should provide clear access to the core discovery paths:
 ```text
 Home
 │
+├── Personalized Recommendations (authenticated, when available)
 ├── Browse Coffees
 ├── Search
 ├── Explore Geographically
 └── Ask the AI Coffee Sommelier
 ```
 
-If Favorites is implemented, authenticated users may also have a route back to saved coffees.
+If Favorites is implemented, authenticated users should also have a clear route back to saved coffees through the application's navigation system.
+
+Home does not need to duplicate every persistent navigation destination as a dedicated content module.
 
 ---
 
@@ -277,6 +486,42 @@ If Favorites is implemented, authenticated users may also have a route back to s
 Home should prioritize useful discovery over general marketing content.
 
 The exact homepage content modules and layout belong to `wireframes-v3.md`.
+
+---
+
+# 6A. Personalized Discovery
+
+## 6A.1 Purpose
+
+Personalized discovery is the user-facing expression of Brewcipe's Taste Profile Mechanic.
+
+It connects the user's taste model and interaction history to ranked coffee discovery without creating a separate content library.
+
+## 6A.2 Relationship
+
+```text
+Taste Model
+     ↓
+Saved Coffees + Coffee History + User Signals
+     ↓
+Recommendation Engine
+     ↓
+Personalized Home
+     ↓
+User interaction
+     ↓
+Taste model evolves
+```
+
+The same personalization context may also be supplied to the AI Coffee Sommelier.
+
+## 6A.3 Navigation Boundary
+
+Personalized recommendations should be presented within Home and existing discovery surfaces rather than creating a separate recommendation-only destination for the MVP.
+
+Authenticated users may see personalized modules; unauthenticated users should continue to receive normal discovery content.
+
+The product mechanic is defined in `docs/product/taste-profile-mechanic-v1.md`.
 
 ---
 
@@ -298,6 +543,8 @@ Discover
 └── Geographical Exploration
 ```
 
+Discover should provide clear access to both general coffee browsing and geographical exploration.
+
 Coffee records may expose useful attributes such as:
 
 * country
@@ -308,6 +555,14 @@ Coffee records may expose useful attributes such as:
 where those attributes are available.
 
 These attributes do not automatically require separate dedicated browsing hierarchies.
+
+---
+
+## 7.3 Discover as a Primary Destination
+
+Discover should function as a stable primary destination regardless of whether users enter through Home, persistent navigation, or another discovery path.
+
+Geographical Exploration remains a child discovery experience rather than a separate top-level product area.
 
 ---
 
@@ -331,7 +586,9 @@ Potential identifying information may include:
 * relevant recipe or brewing information
 * imagery where available
 
-Exact card anatomy belongs to the design system and wireframes.
+The IA defines the coffee entity being represented.
+
+Whether that entity appears as a Coffee Card, Coffee Row, or another reusable presentation belongs to the design system and wireframes.
 
 ---
 
@@ -345,7 +602,7 @@ Coffee
 Recipe Detail
 ```
 
-Selecting a coffee should lead to its structured recipe-detail experience.
+Selecting a coffee should lead to its canonical structured recipe-detail experience.
 
 ---
 
@@ -354,6 +611,8 @@ Selecting a coffee should lead to its structured recipe-detail experience.
 ## 9.1 Purpose
 
 Allow users to discover coffee through geographical relationships.
+
+Geographical Exploration belongs within Discover.
 
 ---
 
@@ -391,9 +650,7 @@ Only geographical entities relevant to available Brewcipe content need to be sur
 
 The initial geographical exploration experience should allow users to begin navigating Brewcipe's geography.
 
-The exact presentation remains open.
-
-It may eventually use:
+The exact presentation may use:
 
 * hierarchical lists
 * visual geographic groups
@@ -401,6 +658,28 @@ It may eventually use:
 * another suitable navigation pattern
 
 The IA defines the relationships, not the visualization technique.
+
+A future map-supported experience should complement rather than replace an understandable accessible hierarchy.
+
+---
+
+## 9.4 Geographic Context
+
+Where useful, Brewcipe should preserve the user's understanding of their position within the geographical hierarchy.
+
+For example:
+
+```text
+Discover
+    ↓
+Asia
+    ↓
+Southeast Asia
+    ↓
+Vietnam
+```
+
+The exact breadcrumb, back-navigation, or contextual-navigation treatment belongs to interaction design.
 
 ---
 
@@ -432,6 +711,18 @@ South Asia
 ```
 
 Only regions represented by Brewcipe content need to appear.
+
+---
+
+## 10.3 Navigation
+
+```text
+Geographical Exploration
+        ↓
+Continent
+        ↓
+Region
+```
 
 ---
 
@@ -500,6 +791,22 @@ Recipe Detail
 
 ---
 
+## 12.3 Geographic Context
+
+Country should remain connected to its parent geography where available.
+
+Conceptually:
+
+```text
+Asia
+→ Southeast Asia
+→ Vietnam
+```
+
+The exact interaction treatment belongs to the wireframes.
+
+---
+
 # 13. Coffee / Recipe Detail
 
 ## 13.1 Purpose
@@ -507,6 +814,8 @@ Recipe Detail
 Provide the complete available structured information needed to understand and prepare a Brewcipe coffee.
 
 This is one of Brewcipe's primary content destinations.
+
+All major coffee-discovery paths should resolve here when a user selects a canonical Brewcipe coffee.
 
 ---
 
@@ -559,9 +868,9 @@ The surrounding information hierarchy should adapt naturally.
 
 Brewcipe's data model supports source attribution.
 
-Whether source attribution is visibly presented directly on the MVP recipe page remains subject to the current product-design decision.
+The IA should preserve a place for provenance without prescribing its exact visual treatment.
 
-The IA should preserve a place for provenance without prematurely deciding the exact interface treatment.
+Source attribution remains secondary to the recipe itself but should remain structurally available where required.
 
 ---
 
@@ -571,11 +880,37 @@ Depending on implemented scope, recipe detail may provide access to:
 
 ```text
 Favorite
-Geographical context
-AI recommendation context
+Geographical Context
+AI Recommendation Context
 ```
 
+These are supporting relationships rather than separate recipe destinations.
+
 Related-coffee recommendations are not required for the current MVP.
+
+---
+
+## 13.6 Canonical Coffee Destination
+
+Brewcipe should maintain one canonical recipe-detail destination for each coffee.
+
+The following paths should not create duplicate recipe content:
+
+```text
+Discover
+Search
+Geography
+Favorites
+AI Coffee Sommelier
+```
+
+Instead:
+
+```text
+Any Coffee Discovery Path
+        ↓
+Canonical Coffee / Recipe Detail
+```
 
 ---
 
@@ -584,6 +919,8 @@ Related-coffee recommendations are not required for the current MVP.
 ## 14.1 Purpose
 
 Allow users who know what they are looking for to find relevant coffee without browsing the full library.
+
+Search is a primary Brewcipe discovery path.
 
 ---
 
@@ -601,7 +938,21 @@ or another coffee name.
 
 ---
 
-## 14.3 Additional Search Attributes
+## 14.3 Search Destination
+
+Search may be presented through:
+
+* a dedicated Search destination
+* a globally available search control
+* search entry points within discovery experiences
+
+These should lead into the same underlying search system.
+
+The IA does not require each search entry point to become a separate route.
+
+---
+
+## 14.4 Additional Search Attributes
 
 The PRD permits additional searchable attributes where available, but advanced search and filtering are not required for the core MVP.
 
@@ -640,7 +991,11 @@ Coffee
 ...
 ```
 
-Selecting a result opens the corresponding recipe detail.
+The IA does not require results to use cards.
+
+The design system and wireframes may choose compact Coffee Rows, Coffee Cards, or another reusable coffee presentation according to context.
+
+Selecting a result opens the corresponding canonical Recipe Detail.
 
 ---
 
@@ -660,7 +1015,9 @@ Exact content belongs to the wireframes and content design.
 
 ## 16.1 Purpose
 
-Provide conversational coffee discovery for users who do not know exactly what they want to search for.
+Provide conversational coffee discovery for users who do not know exactly what they want to search for, while using the user's available personalization context when authenticated.
+
+The Sommelier is a discovery tool rather than a separate coffee-content system.
 
 ---
 
@@ -687,9 +1044,9 @@ The AI Coffee Sommelier may return:
 ```text
 Recommendation
 │
-├── Suggested coffee
+├── Suggested Coffee
 ├── Explanation
-└── Route to Brewcipe recipe
+└── Route to Brewcipe Recipe
 ```
 
 When a relevant Brewcipe recipe exists, recommendations should provide a clear path to that canonical recipe.
@@ -711,6 +1068,26 @@ Recommendation
       ↓
 Brewcipe Coffee / Recipe Detail
 ```
+
+---
+
+## 16.5 Navigation Label
+
+The product area remains:
+
+```text
+AI Coffee Sommelier
+```
+
+A shorter navigation label such as:
+
+```text
+Ask
+```
+
+may be used where navigation space is constrained if it remains understandable and consistent.
+
+The shortened label should not redefine the underlying product concept.
 
 ---
 
@@ -736,7 +1113,7 @@ Authenticated Session
 Protected Actions
 ```
 
-The exact authentication provider interaction and interface flow belong to implementation and interaction design.
+The exact authentication-provider interaction and interface flow belong to implementation and interaction design.
 
 ---
 
@@ -758,7 +1135,27 @@ Successful Authentication
 Return to Relevant Context
 ```
 
-The exact post-authentication behavior should be confirmed during wireframing.
+---
+
+## 17.4 Context Preservation
+
+Authentication should preserve the user's originating context where practical.
+
+For example:
+
+```text
+Recipe Detail
+    ↓
+Favorite
+    ↓
+Authentication
+    ↓
+Recipe Detail
+    ↓
+Favorite Completed
+```
+
+The exact post-authentication interaction remains subject to implementation validation.
 
 ---
 
@@ -774,6 +1171,8 @@ Authenticated users only.
 
 Provide access to coffees intentionally saved by the current user.
 
+Favorites is a return path into Brewcipe's existing coffee library rather than a separate content system.
+
 ---
 
 ## 18.3 Structure
@@ -786,11 +1185,23 @@ Saved Coffee
 Recipe Detail
 ```
 
-Favorites should reuse Brewcipe's standard coffee presentation rather than creating an unrelated dashboard-style experience.
+Favorites should reuse Brewcipe's standard coffee entities rather than creating an unrelated dashboard-style information structure.
 
 ---
 
-## 18.4 Empty State
+## 18.4 Navigation Role
+
+When Favorites is included in the release, users should have persistent and predictable access to it.
+
+On mobile, Favorites may occupy a primary bottom-navigation destination.
+
+On larger screens, it should remain available through the equivalent desktop navigation hierarchy.
+
+Exact placement belongs to the wireframes and design system.
+
+---
+
+## 18.5 Empty State
 
 When a user has not saved any coffees, the page should:
 
@@ -801,15 +1212,61 @@ When a user has not saved any coffees, the page should:
 
 # 19. Account Access
 
+## 19.1 Purpose
+
+Provide lightweight access to user-specific account actions.
+
 Brewcipe requires a way for users to:
 
 * authenticate
 * understand whether they are authenticated
+* access relevant user-specific functionality
 * log out
 
-A dedicated profile-management page is **not currently required** by the MVP requirements.
+---
 
-If later product requirements introduce account settings or user-profile information, the IA can be expanded accordingly.
+## 19.2 Unauthenticated State
+
+Conceptually:
+
+```text
+Account Access
+      ↓
+Sign In / Register
+```
+
+---
+
+## 19.3 Authenticated State
+
+Conceptually:
+
+```text
+Account Access
+│
+├── Authenticated Identity
+├── Favorites where appropriate
+└── Logout
+```
+
+Favorites may also remain independently accessible through primary navigation.
+
+---
+
+## 19.4 MVP Boundary
+
+A dedicated profile-management system is **not currently required** by the MVP requirements.
+
+The Account destination should therefore remain lightweight.
+
+If later product requirements introduce:
+
+* profile information
+* account settings
+* preferences
+* user history
+
+the IA can be expanded accordingly.
 
 ---
 
@@ -817,24 +1274,29 @@ If later product requirements introduce account settings or user-profile informa
 
 The following represents the current Brewcipe MVP information architecture.
 
-| ID    | Page / View               | Access              | Priority    | Primary Purpose                          |
-| ----- | ------------------------- | ------------------- | ----------- | ---------------------------------------- |
-| IA-01 | Home                      | Public              | Core        | Entry into Brewcipe discovery            |
-| IA-02 | Discover / Coffee Library | Public              | Must Have   | Browse available coffees                 |
-| IA-03 | Geographic Explore        | Public              | Must Have   | Enter geographical discovery             |
-| IA-04 | Continent                 | Public              | Must Have   | Browse relevant regions                  |
-| IA-05 | Region                    | Public              | Must Have   | Browse relevant countries                |
-| IA-06 | Country                   | Public              | Must Have   | Browse coffees associated with a country |
-| IA-07 | Coffee / Recipe Detail    | Public              | Must Have   | Understand and prepare a coffee          |
-| IA-08 | Search                    | Public              | Must Have   | Submit a coffee search                   |
-| IA-09 | Search Results            | Public              | Must Have   | View matching coffees                    |
-| IA-10 | AI Coffee Sommelier       | Public              | Should Have | Conversational coffee discovery          |
-| IA-11 | Favorites                 | Authenticated       | Should Have | View saved coffees                       |
-| IA-12 | Authentication            | Public / Contextual | Should Have | Register or authenticate                 |
+| ID    | Page / View               | Access                 | Priority    | Primary Purpose                                 |
+| ----- | ------------------------- | ---------------------- | ----------- | ----------------------------------------------- |
+| IA-01 | Home                      | Public                 | Core        | Entry into Brewcipe discovery                   |
+| IA-02 | Discover / Coffee Library | Public                 | Must Have   | Browse available coffees                        |
+| IA-03 | Geographic Explore        | Public                 | Must Have   | Enter geographical discovery                    |
+| IA-04 | Continent                 | Public                 | Must Have   | Browse relevant regions                         |
+| IA-05 | Region                    | Public                 | Must Have   | Browse relevant countries                       |
+| IA-06 | Country                   | Public                 | Must Have   | Browse coffees associated with a country        |
+| IA-07 | Coffee / Recipe Detail    | Public                 | Must Have   | Understand and prepare a coffee                 |
+| IA-08 | Search                    | Public                 | Must Have   | Submit a coffee search                          |
+| IA-09 | Search Results            | Public                 | Must Have   | View matching coffees                           |
+| IA-10 | AI Coffee Sommelier       | Public                 | Should Have | Conversational coffee discovery                 |
+| IA-11 | Favorites                 | Authenticated          | Should Have | View saved coffees                              |
+| IA-12 | Authentication            | Public / Contextual    | Should Have | Register or authenticate                        |
+| IA-13 | Account Access            | Public / Authenticated | Should Have | Access authentication state and account actions |
 
 A single application route may support more than one IA state.
 
-For example, Search and Search Results may be implemented within one route or interface.
+For example:
+
+* Search and Search Results may use one route or interface.
+* Authentication may appear contextually rather than requiring a dedicated full page.
+* Account Access may use a page, menu, sheet, or another interface pattern.
 
 The IA inventory describes conceptual user-facing states rather than requiring a one-to-one relationship with frontend files.
 
@@ -849,22 +1311,37 @@ Conceptually:
 ```text
 Continent Template
         ↓
-selected continent data
+Selected Continent Data
 
 Region Template
         ↓
-selected region data
+Selected Region Data
 
 Country Template
         ↓
-selected country data
+Selected Country Data
 
 Recipe Template
         ↓
-selected coffee data
+Selected Coffee Data
 ```
 
 This allows Brewcipe's content library to grow without creating new page designs for every coffee or location.
+
+The same content entity may use different visual representations in different discovery contexts without becoming a different IA entity.
+
+For example:
+
+```text
+Coffee Card
+Coffee Row
+AI Recommendation
+Favorite Item
+        ↓
+Same Coffee Entity
+        ↓
+Canonical Recipe Detail
+```
 
 ---
 
@@ -890,10 +1367,14 @@ Brewcipe Coffee Library
 │               └── Coffee
 │                   └── Recipe Detail
 │
-└── AI Coffee Sommelier
-    └── Recommendation
-        └── Coffee
-            └── Recipe Detail
+├── AI Coffee Sommelier
+│   └── Recommendation
+│       └── Coffee
+│           └── Recipe Detail
+│
+└── Favorites
+    └── Saved Coffee
+        └── Recipe Detail
 ```
 
 Favorites provide a user-specific return path to existing coffee records rather than creating duplicate recipe content.
@@ -905,12 +1386,12 @@ Favorites provide a user-specific return path to existing coffee records rather 
 ## 23.1 Browse Coffee
 
 ```text
-Home
-    ↓
+Home / Primary Navigation
+        ↓
 Discover
-    ↓
+        ↓
 Coffee
-    ↓
+        ↓
 Recipe Detail
 ```
 
@@ -919,18 +1400,18 @@ Recipe Detail
 ## 23.2 Browse by Geography
 
 ```text
-Home
-    ↓
+Home / Discover
+        ↓
 Geographic Explore
-    ↓
+        ↓
 Continent
-    ↓
+        ↓
 Region
-    ↓
+        ↓
 Country
-    ↓
+        ↓
 Coffee
-    ↓
+        ↓
 Recipe Detail
 ```
 
@@ -939,7 +1420,7 @@ Recipe Detail
 ## 23.3 Search by Name
 
 ```text
-Home / Search Entry
+Home / Primary Navigation / Search Entry
         ↓
 Search
         ↓
@@ -955,7 +1436,7 @@ Recipe Detail
 ## 23.4 Ask the Sommelier
 
 ```text
-Home / Navigation
+Home / Primary Navigation
         ↓
 AI Coffee Sommelier
         ↓
@@ -971,7 +1452,7 @@ Recipe Detail
 ## 23.5 Save a Coffee
 
 ```text
-Recipe Detail
+Coffee / Recipe Detail
         ↓
 Favorite
         ↓
@@ -988,11 +1469,27 @@ Favorites
 ## 23.6 Return to a Saved Coffee
 
 ```text
+Primary Navigation / Account Access
+        ↓
 Favorites
-    ↓
+        ↓
 Saved Coffee
-    ↓
+        ↓
 Recipe Detail
+```
+
+---
+
+## 23.7 Authenticate From Account Access
+
+```text
+Account Access
+        ↓
+Sign In / Register
+        ↓
+Authentication
+        ↓
+Authenticated Account State
 ```
 
 ---
@@ -1001,13 +1498,13 @@ Recipe Detail
 
 ## NAV-001 — Core Navigation
 
-Users should have a clear route to Brewcipe's primary discovery experiences.
+Users should have a clear and persistent route to Brewcipe's primary discovery experiences.
 
 ---
 
 ## NAV-002 — Coffee Destination
 
-Coffee discovery, search results, geographical results, favorites, and relevant AI recommendations should resolve to the canonical coffee / recipe detail experience.
+Coffee discovery, search results, geographical results, favorites, and relevant AI recommendations should resolve to the canonical Coffee / Recipe Detail experience.
 
 ---
 
@@ -1069,6 +1566,68 @@ When users move into temporary or supporting flows such as authentication, Brewc
 
 ---
 
+## NAV-008 — Responsive Navigation Equivalence
+
+Primary destinations should remain accessible across mobile, tablet, desktop, and wide-desktop layouts.
+
+The navigation component may change, but the information hierarchy should remain coherent.
+
+Conceptually:
+
+```text
+Mobile Bottom Navigation
+        ↓
+Tablet Adaptive Navigation
+        ↓
+Desktop Navigation
+
+Same Destination Hierarchy
+```
+
+---
+
+## NAV-009 — Primary vs Contextual Actions
+
+Primary navigation should contain product destinations.
+
+Contextual actions such as:
+
+```text
+Back
+Favorite
+Close
+Filter
+Clear
+```
+
+should not become primary navigation destinations merely because they use icons.
+
+---
+
+## NAV-010 — Account Separation
+
+Account / Authentication may remain visually separated from Brewcipe's primary coffee-discovery destinations.
+
+Its placement should remain predictable and accessible.
+
+---
+
+## NAV-011 — Search Accessibility
+
+Search should remain directly accessible from Brewcipe's primary application structure.
+
+If multiple search entry points exist, they should resolve to the same underlying search experience.
+
+---
+
+## NAV-012 — Release-Aware Navigation
+
+Navigation should reflect functionality actually included in the current release.
+
+If a Should Have capability such as Favorites or the AI Coffee Sommelier is deferred, its primary navigation destination should not appear as an inactive placeholder.
+
+---
+
 # 25. URL and Routing Considerations
 
 Information architecture should support predictable and human-readable navigation.
@@ -1094,12 +1653,16 @@ sommelier
 
 favorites
 
+account
+
 authentication
 ```
 
 Exact URL patterns, slugs, route parameters, and routing implementation belong to frontend and technical architecture decisions.
 
 The IA should not prescribe implementation-specific paths unless those routes later become part of a deliberate product decision.
+
+Multiple interface presentations should not create unnecessary duplicate URLs for the same canonical coffee content.
 
 ---
 
@@ -1132,45 +1695,81 @@ Some of these may become future capabilities if the PRD is updated.
 
 Brewing method remains valid recipe information and may support search or discovery where available without requiring a dedicated page hierarchy.
 
+Visual inspiration from other coffee applications should not be interpreted as permission to add their product functionality to Brewcipe's IA.
+
 ---
 
-# 27. Open IA Decisions
+# 27. Resolved and Open IA Decisions
 
-The following product questions remain intentionally unresolved.
+## 27.1 Resolved Direction
 
-| Decision                                                            | Current Status         |
-| ------------------------------------------------------------------- | ---------------------- |
-| Exact primary navigation labels                                     | TBD during wireframing |
-| Mobile navigation pattern                                           | TBD during wireframing |
-| Desktop navigation pattern                                          | TBD during wireframing |
-| Dedicated Search page versus integrated global search               | TBD                    |
-| Geographic list versus richer visual/map exploration                | TBD                    |
-| Which search attributes beyond coffee name belong in MVP            | TBD                    |
-| How much cultural context appears in discovery versus recipe detail | TBD                    |
-| Exact visible treatment of source attribution                       | TBD                    |
-| Exact post-authentication return behavior                           | TBD                    |
-| Final account/authentication presentation                           | TBD                    |
+The following decisions now have sufficient direction to guide wireframing:
+
+| Decision                     | Current Direction                                                  |
+| ---------------------------- | ------------------------------------------------------------------ |
+| Mobile navigation pattern    | Persistent bottom navigation for primary destinations              |
+| Tablet navigation pattern    | Mobile pattern or adaptive transition according to available space |
+| Desktop navigation pattern   | Persistent larger-screen navigation                                |
+| Account placement            | Accessible but may remain separate from primary coffee navigation  |
+| Favorites navigation         | Persistent destination when feature is included                    |
+| Sommelier navigation         | Primary discovery destination when feature is included             |
+| Geographic Explore hierarchy | Discover → Continent → Region → Country → Coffee                   |
+| Canonical coffee destination | One Coffee / Recipe Detail experience                              |
+| Responsive navigation        | Presentation changes; destination hierarchy remains consistent     |
+
+---
+
+## 27.2 Decisions Still Open
+
+| Decision                                                                      | Current Status                           |
+| ----------------------------------------------------------------------------- | ---------------------------------------- |
+| Final primary navigation labels                                               | Needs terminology validation             |
+| Whether `AI Coffee Sommelier` uses `Sommelier` or `Ask` in compact navigation | Needs terminology / usability validation |
+| Exact number of mobile bottom-navigation destinations                         | Depends on included release capabilities |
+| Dedicated Search page versus combined global + destination search             | Interaction validation                   |
+| Exact tablet navigation transition point                                      | Responsive implementation validation     |
+| Desktop header versus another validated larger-screen presentation            | Wireframe / high-fidelity validation     |
+| Geographic list versus richer visual/map-supported exploration                | Future design decision                   |
+| Which search attributes beyond coffee name belong in MVP                      | Product decision                         |
+| How much cultural context appears in discovery versus recipe detail           | Content-design decision                  |
+| Exact visible treatment of source attribution                                 | Content / visual-design decision         |
+| Exact post-authentication favorite completion behavior                        | Interaction validation                   |
+| Final account/authentication presentation                                     | Interaction validation                   |
 
 Open decisions should remain visible until intentionally resolved.
+
+They should not prevent implementation of the established hierarchy.
 
 ---
 
 # 28. Relationship to Wireframes
 
-This document defines **what information and destinations exist**.
+This document defines:
+
+* what information exists
+* what destinations exist
+* how destinations relate
+* which destinations are primary
+* which relationships are contextual
+* which experiences resolve to canonical coffee content
 
 The wireframes should determine:
 
-* where navigation controls are placed
+* exact navigation-control placement
+* exact bottom-navigation composition
+* icon treatment
+* application-header structure
 * how Home is composed
-* how coffee cards are arranged
-* how geographic hierarchy is presented
-* whether Search occupies a page, overlay, field, or combination
+* Coffee Card versus Coffee Row usage
+* how geographic hierarchy is visually presented
+* whether Search occupies a page, field, overlay, or combination
 * how recipe information is visually ordered
 * how Favorites and Sommelier interactions work
-* how mobile and desktop layouts differ
+* how navigation transforms across mobile, tablet, desktop, and wide desktop
 
-The wireframes should not introduce new product capabilities without corresponding product requirements.
+The wireframes should preserve the IA hierarchy.
+
+They should not introduce new product capabilities without corresponding product requirements.
 
 ---
 
@@ -1204,6 +1803,26 @@ AI Coffee Sommelier
 Favorites
 ```
 
-Regardless of entry point, Brewcipe should guide users toward the same structured coffee and recipe information.
+Regardless of entry point:
 
-The architecture should remain understandable without requiring users to understand Brewcipe's database model, internal taxonomy, or AI implementation.
+```text
+Discover ────────────┐
+Search ──────────────┤
+Geography ───────────┤
+Sommelier ───────────┼──→ Coffee ──→ Canonical Recipe Detail
+Favorites ───────────┘
+```
+
+The architecture should remain understandable without requiring users to understand Brewcipe's database model, internal taxonomy, responsive implementation, or AI architecture.
+
+Navigation presentation may change across devices, but users should continue to recognize the same Brewcipe structure and destinations.
+
+The intended result is an information architecture that supports both:
+
+```text
+Exploration
++
+Efficient Application Navigation
+```
+
+without allowing navigation mechanics to overshadow the coffee itself.
