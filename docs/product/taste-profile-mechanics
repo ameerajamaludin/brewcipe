@@ -1,0 +1,282 @@
+# Brewcipe — Taste Profile Mechanic
+
+## 1. Purpose
+
+The Taste Profile Mechanic defines how Brewcipe turns a user's stated preferences and observed coffee interactions into an evolving personalization loop.
+
+The mechanic is the product-level bridge between the user's taste model, saved coffees, coffee history, user signals, recommendations, Personalized Home, and the AI Coffee Sommelier.
+
+It is intentionally designed so that the core recommendation intelligence does not depend on an LLM.
+
+---
+
+## 2. Product Mechanic
+
+```text
+                     ┌─────────────┐
+                     │ Taste Model │
+                     └──────┬──────┘
+                            │
+          ┌─────────────────┼─────────────────┐
+          ↓                 ↓                 ↓
+    Saved Coffees      Coffee History    User Signals
+          │                 │                 │
+          └─────────────────┼─────────────────┘
+                            ↓
+                 ┌────────────────────┐
+                 │ Recommendation     │
+                 │ Engine             │
+                 └─────────┬──────────┘
+                           │
+              ┌────────────┴────────────┐
+              ↓                         ↓
+       Personalized Home          Sommelier
+              │                         │
+              └────────────┬────────────┘
+                           ↓
+                     User interacts
+                           ↓
+                    Taste model evolves
+```
+
+This is a feedback loop, not a one-time preference form.
+
+---
+
+## 3. Taste Model
+
+The initial taste model is based on explicit onboarding preferences and user discovery constraints.
+
+Current preference signals are:
+
+```text
+sweet
+milky
+strong
+spiced
+simple
+```
+
+Current supporting preference dimensions are:
+
+```text
+brewer preference
+    espresso_machine
+    french_press
+    pour_over
+    instant
+    no_special_equipment
+    open_to_anything
+
+discovery style
+    familiar
+    global
+    traditional
+    adventurous
+```
+
+The current model also uses experience signals such as hot/iced and dessert-like characteristics through recipe intelligence where relevant to recommendation matching.
+
+The taste model should not pretend that the dataset contains validated numeric sweetness, acidity, or body scores. Brewcipe currently derives qualitative recipe-intelligence signals from structured recipe data instead.
+
+---
+
+## 4. Recipe Intelligence
+
+Brewcipe derives application-level signals from the canonical recipe fields. These are recommendation features, not new canonical claims in the coffee dataset.
+
+Current derived signals include:
+
+```text
+sweet
+milky
+strong
+spiced
+chocolate
+nutty
+citrus
+fruity
+herbal
+hot
+iced
+simple
+dessert_like
+```
+
+The signals are derived deterministically from structured recipe information such as ingredients, preparation characteristics, and serving temperature.
+
+They are used by the recommendation layer to compare recipes against the taste model and observed interactions.
+
+---
+
+## 5. User Signals
+
+Brewcipe distinguishes between explicit and observed signals.
+
+### Explicit signals
+
+Collected from the taste-profile experience:
+
+```text
+preferences
+brewers
+discovery_style
+```
+
+### Observed signals
+
+Collected from user interactions with recipes:
+
+```text
+saved
+tried
+skipped
+```
+
+A saved coffee represents interest or intent to return.
+
+A tried coffee represents stronger evidence because the user has actually experienced the recipe.
+
+A skipped coffee represents negative or avoidance evidence for future discovery.
+
+The recommendation engine should be able to use these signals without requiring Gemini.
+
+---
+
+## 6. Current Implementation Boundary
+
+The current implementation has the following personalization pieces in place:
+
+```text
+Taste profile
+    ↓
+Recommendation matching
+    ↓
+Tried / skipped recipe history
+    ↓
+Learned recipe-intelligence affinity
+    ↓
+Personalized recommendation ranking
+```
+
+The current interaction model persists `tried` and `skipped` recipe interactions in Supabase.
+
+The current recommendation engine derives signals from tried recipes and awards learned-affinity points when a candidate shares signals with recipes the user has tried.
+
+Favorites already persist saved coffees through the existing `favorites` table, but favorite-state weighting is not yet the same as tried-history learning. Saved-coffee weighting is therefore a planned continuation of the mechanic rather than a claim that it is already fully implemented in ranking.
+
+---
+
+## 7. Recommendation Engine Role
+
+The recommendation engine is the deterministic core of personalization.
+
+Conceptually:
+
+```text
+Taste Profile
+      +
+Brewer Preferences
+      +
+Discovery Style
+      +
+Recipe Intelligence
+      +
+Observed User Signals
+      ↓
+Recommendation Score
+      ↓
+Ranked Brewcipe Recipes
+```
+
+The engine should remain explainable and testable.
+
+Gemini is not required to calculate the base recommendation score.
+
+---
+
+## 8. Personalized Home
+
+Personalized Home is the user-facing destination for ranked recommendations.
+
+For an authenticated user, the Home experience should eventually be able to prioritize recommendations informed by the user's current taste model and observed interactions.
+
+For a new or unauthenticated user, Brewcipe should continue to provide useful non-personalized discovery rather than requiring a taste profile.
+
+The important behavior is that Home is an output of the recommendation system rather than a static list that merely happens to be labeled personalized.
+
+---
+
+## 9. Sommelier Role
+
+The Sommelier is the conversational layer over the same personalization context.
+
+Conceptually:
+
+```text
+User question
+      ↓
+Taste profile + saved/tried/skipped context
+      ↓
+Relevant Brewcipe candidate recipes
+      ↓
+Gemini
+      ↓
+Grounded recommendations + explanation
+```
+
+Gemini receives limited Brewcipe candidate data and personalized user context through the backend. It does not become the source of truth for recipe data or the underlying taste model.
+
+Skipped recipes are excluded from the Sommelier candidate pool before the LLM receives candidates.
+
+---
+
+## 10. Evolution Loop
+
+The intended user loop is:
+
+```text
+1. User establishes a taste profile.
+2. Brewcipe ranks suitable recipes.
+3. User saves, tries, or skips recipes.
+4. Brewcipe records those interactions.
+5. The recommendation system derives stronger user signals.
+6. Future recommendations change accordingly.
+7. The Sommelier receives the updated context.
+8. User continues exploring and generating new signals.
+```
+
+The product should demonstrate the loop through observable recommendation changes rather than merely storing interaction data.
+
+---
+
+## 11. Data and Trust Boundaries
+
+The Taste Profile Mechanic must preserve these boundaries:
+
+* Canonical recipe data remains the source of recipe facts.
+* Derived recipe-intelligence signals are application-level features, not fabricated source data.
+* User taste preferences and interactions are user-specific application data.
+* The recommendation engine is deterministic application logic.
+* Gemini is used for conversational recommendation and explanation, not as the canonical recipe database.
+* Private production coffee data remains outside the public repository.
+
+---
+
+## 12. Next Implementation Milestone
+
+The next meaningful milestone is to close the feedback loop end to end:
+
+```text
+Personalized recommendations
+        ↓
+User saves / tries / skips
+        ↓
+Signals update
+        ↓
+Recommendations visibly change
+        ↓
+Sommelier reflects the updated context
+```
+
+This milestone is the clearest demonstration of Brewcipe 2.0's product value.
