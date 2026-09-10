@@ -245,6 +245,8 @@ regions
     ↓
 countries
     ↓
+recipe_countries
+    ↓
 coffee_recipes
        │
        ├── recipe_types
@@ -260,7 +262,7 @@ coffee_recipes
        ├── recipe_sources ──→ sources
        │
        └── recipe_verification
-       
+
 auth.users
     ↓
 favorites
@@ -291,6 +293,8 @@ recipe_temperatures
 recipe_ingredients
 recipe_instructions
 
+recipe_countries
+
 sources
 recipe_sources
 
@@ -319,6 +323,8 @@ Continent
 Region
     ↓
 Country
+    ↓
+Recipe Country
     ↓
 Coffee Recipe
 ```
@@ -458,6 +464,8 @@ CHECK slug is not blank
 
 # 10. Geography Relationship
 
+# 10. Geography Relationship
+
 The geographical model becomes:
 
 ```text
@@ -471,7 +479,11 @@ countries.region_id
 
 countries.id
       ↑
-coffee_recipes.country_id
+recipe_countries.country_id
+
+coffee_recipes.id
+      ↑
+recipe_countries.recipe_id
 ```
 
 A recipe therefore does not need separate:
@@ -503,6 +515,25 @@ country = Vietnam
 region = Western Europe
 continent = Africa
 ```
+```md
+
+# 10.1 `recipe_countries`
+
+## Purpose
+
+Associates coffee recipes with one or more canonical countries.
+
+## Proposed Columns
+
+| Column       | Type   | Null | Rule                     |
+| ------------ | ------ | ---: | ------------------------ |
+| `recipe_id`  | `uuid` |   No | FK → `coffee_recipes.id` |
+| `country_id` | `uuid` |   No | FK → `countries.id`      |
+
+## Primary Key
+
+```text
+PRIMARY KEY (recipe_id, country_id)
 
 ---
 
@@ -565,7 +596,6 @@ Stores the central canonical Brewcipe recipe record.
 | `english_name`     | `text`        |   No | Primary display name              |
 | `native_name`      | `text`        |  Yes | Native/local name                 |
 | `transliteration`  | `text`        |  Yes | Latin-script rendering            |
-| `country_id`       | `uuid`        |   No | FK → `countries.id`               |
 | `recipe_type_id`   | `smallint`    |  Yes | FK → `recipe_types.id`            |
 | `servings`         | `integer`     |  Yes | Intended servings                 |
 | `associated_meal`  | `text`        |  Yes | Short cultural-context label      |
@@ -640,8 +670,6 @@ CHECK servings IS NULL OR servings > 0
 Foreign keys:
 
 ```text
-country_id
-→ countries.id
 
 recipe_type_id
 → recipe_types.id
@@ -1630,6 +1658,106 @@ Exact SQL policy syntax belongs in the migration implementation.
 
 ---
 
+# 49A. Taste Profile & Recipe Interaction Data
+
+Brewcipe's personalization mechanic introduces user-specific application data in addition to the existing `favorites` relationship.
+
+These tables are not part of the canonical coffee recipe dataset.
+
+## `user_taste_profiles`
+
+### Purpose
+
+Stores the authenticated user's current explicit taste profile used by the recommendation engine and Sommelier context builder.
+
+### Current Logical Fields
+
+```text
+user_id
+preferences
+brewers
+discovery_style
+```
+
+`user_id` references `auth.users.id` and identifies the owner of the profile.
+
+The current supported preference signals are:
+
+```text
+sweet
+milky
+strong
+spiced
+simple
+```
+
+Supported brewer and discovery-style values are defined by the application taste-profile schema.
+
+## `recipe_interactions`
+
+### Purpose
+
+Stores meaningful user interactions with Brewcipe recipes that can be used as personalization evidence.
+
+### Current Logical Fields
+
+```text
+user_id
+recipe_id
+interaction
+created_at
+```
+
+`recipe_id` references the internal UUID of `coffee_recipes.id`.
+
+The stable public recipe identifier `coffee_recipe_id` remains the application-facing domain identifier. Application services translate between the database UUID and stable recipe identifier where required.
+
+### Current Interaction Types
+
+```text
+tried
+skipped
+```
+
+The current primary key is:
+
+```text
+(user_id, recipe_id, interaction)
+```
+
+This allows a user to retain one row per interaction type for a recipe while preventing duplicate identical interaction rows.
+
+## Personalization Relationship
+
+```text
+auth.users
+   │
+   ├──────────────→ user_taste_profiles
+   │
+   ├──────────────→ favorites ─────────→ coffee_recipes
+   │
+   └──────────────→ recipe_interactions ─→ coffee_recipes
+```
+
+The recommendation engine consumes this user-specific information but does not write canonical recipe facts.
+
+## Saved vs Tried vs Skipped
+
+```text
+Favorite / Saved
+    = explicit interest
+
+Tried
+    = stronger evidence from actual experience
+
+Skipped
+    = avoidance / negative discovery evidence
+```
+
+Favorite weighting is not yet equivalent to tried-history learning in the current recommendation implementation.
+
+---
+
 # 49. Recipe Data Access
 
 Core coffee content is publicly discoverable.
@@ -1717,7 +1845,7 @@ regions(continent_id)
 
 countries(region_id)
 
-coffee_recipes(country_id)
+recipe_countries(country_id)
 
 coffee_recipes(recipe_type_id)
 
@@ -1781,6 +1909,7 @@ coffee_recipes
 countries
 regions
 continents
+recipe_countries
 
 recipe_types
 
@@ -1846,9 +1975,11 @@ Iced
 coffee_recipes
 coffee_recipe_050
 Vietnamese Iced Milk Coffee
-country_id → Vietnam
 recipe_type_id → Cultural
 servings → 1
+
+recipe_countries
+coffee_recipe_050 → Vietnam
 
 recipe_brewers
 coffee_recipe_050 → Phin
@@ -1982,19 +2113,21 @@ Recommended order:
 
 7. coffee_recipes
 
-8. recipe_brewers
+8. recipe_countries
 
-9. recipe_temperatures
+9. recipe_brewers
 
-10. recipe_ingredients
+10. recipe_temperatures
 
-11. recipe_instructions
+11. recipe_ingredients
 
-12. sources
+12. recipe_instructions
 
-13. recipe_sources
+13. sources
 
-14. recipe_verification
+14. recipe_sources
+
+15. recipe_verification
 ```
 
 `favorites` are created through normal application use and are not part of initial coffee-data import.
@@ -2122,6 +2255,10 @@ Recommended cascade behavior:
 coffee_recipes
     ↓ CASCADE
 recipe_ingredients
+
+coffee_recipes
+    ↓ CASCADE
+recipe_countries
 
 coffee_recipes
     ↓ CASCADE
@@ -2946,14 +3083,13 @@ coffee_recipes
 recipe_verification
 
 
-AUTHENTICATION & FAVORITES
-──────────────────────────
+AUTHENTICATION & PERSONALIZATION
+────────────────────────────────
 
 Supabase auth.users
-    ↓
-favorites
-    ↓
-coffee_recipes
+    ├── user_taste_profiles
+    ├── favorites ─────────────→ coffee_recipes
+    └── recipe_interactions ───→ coffee_recipes
 ```
 
 ---
